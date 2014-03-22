@@ -4,6 +4,7 @@
 #include <string>
 
 #include <osg/Referenced>
+#include <osg/Group>
 
 #include <gdal/ogrsf_frmts.h>
 
@@ -16,11 +17,14 @@ protected:
 	~ShapeWorld() {};
 	void findWorldBounds(OGRLayer* inLayer);
 	void findPolygonCenter(OGRLinearRing* linearRing, double& x, double& y);
+	osg::ref_ptr<osg::Group> addBuilding(OGRLinearRing* linearRing, double cx, double cy);
+	osg::ref_ptr<osg::Group> buildTile(OGRLayer* layer, double px, double py);
 	
 	double m_minX;
 	double m_maxX;
 	double m_minY;
 	double m_maxY;
 
+	double m_tilesize;
 };
 #endif

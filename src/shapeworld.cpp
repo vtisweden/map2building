@@ -1,5 +1,7 @@
 #include "shapeworld.h"
 
+#include <sstream>
+
 #include <osg/Notify>
 
 bool ShapeWorld::loadShapeFile(const std::string& filename) {
@@ -25,8 +27,16 @@ bool ShapeWorld::loadShapeFile(const std::string& filename) {
 	//Find boundaries of layer features
 	findWorldBounds(ogrLayer);
 
-	//Reset before classifying
-	ogrLayer->ResetReading();
+	m_tilesize = 5000.0;
+	int tiles = 0;
+	osg::ref_ptr<osg::Group> root = new osg::Group;
+	for (double px = m_minX; px < m_maxX; px += m_tilesize) {
+		for (double py = m_minY; py < m_maxY; py += m_tilesize) {
+			tiles++;
+			root->addChild(buildTile(ogrLayer, px, py));
+		}
+	}
+	osg::notify(osg::ALWAYS) << "Number of tiles: " << tiles << std::endl;
 
 	return true;
 }
@@ -107,4 +117,72 @@ void ShapeWorld::findPolygonCenter(OGRLinearRing* linearRing, double& centerX, d
 	// Calculate center point of building
 	centerX = ( minX + maxX ) / 2.0;
 	centerY = ( minY + maxY ) / 2.0;
+}
+
+osg::ref_ptr<osg::Group> ShapeWorld::buildTile(OGRLayer* layer, double px, double py) {
+
+	// Calculate center point of tile
+	//double centerX = px + m_tilesize / 2.0;
+	//double centerY = px + m_tilesize / 2.0;
+
+	osg::ref_ptr<osg::Group> tileGroup = new osg::Group;	
+	std::stringstream tilename;
+	tilename.clear();
+	tilename << "Tile: " << px << ":" << py;
+	tileGroup->setName(tilename.str());
+
+	//Reset before classifying
+	layer->ResetReading();
+
+	int numberOfBuildings = layer->GetFeatureCount();
+	int buildingInTile = 0;
+	for (int h = 0; h < numberOfBuildings; ++h) {
+		OGRFeature* poFeature;
+		poFeature = layer->GetFeature( h );
+
+		OGRGeometry *poGeometry;			
+		poGeometry = poFeature->GetGeometryRef();
+
+		OGRPolygon *poPolygon = (OGRPolygon *) poGeometry;					
+		OGRLinearRing *poLinearRing = poPolygon->getExteriorRing();
+
+		double cx = 0.0;
+		double cy = 0.0;
+		findPolygonCenter(poLinearRing, cx, cy);
+
+		//Check if found building is within the tile
+		if ((cx >= px) && (cx < px + m_tilesize) && (cy >= py) && (cy < py + m_tilesize) ) {
+			osg::ref_ptr<osg::Group> building = addBuilding(poLinearRing, cx, cy);
+			tileGroup->addChild(building);
+			buildingInTile++;
+			
+		} else {
+			//osg::notify(osg::ALWAYS) << "\tOutside" << std::endl;
+		}
+		
+	}
+	osg::notify(osg::ALWAYS) << "Building in tile: " << buildingInTile << std::endl;
+
+	return tileGroup;
+}
+
+osg::ref_ptr<osg::Group> ShapeWorld::addBuilding(OGRLinearRing* linearRing, double cx, double cy) {
+	//Add buildings to node
+	OGRPoint* point = static_cast<OGRPoint*>(OGRGeometryFactory::createGeometry( wkbPoint ));
+
+	osg::ref_ptr<osg::Vec3Array> floorCoord = new osg::Vec3Array;
+
+	for(int i=0; i<linearRing->getNumPoints(); ++i)
+	{
+		linearRing->getPoint(i, point);	
+
+		float newX = point->getX() - cx;
+		float newY = point->getY() - cy;
+		floorCoord->push_back(osg::Vec3( newX, 0.0, newY )); 
+	}
+	
+	OGRGeometryFactory::destroyGeometry(point);
+
+	//return BuildingLibrary::createBuilding(osg::Vec3Array floorCoord);
+	return 0;
 }
