@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- Texture defintions -->
+<textures>
+	<!-- Walls textures-->
+	<texture id="1" filename="textures/bricks_01_d.png" />
+	<texture id="2" filename="textures/stucco_01_d.png" />
+	<texture id="3" filaname="textures/wood_01_d.png" />
+	<!-- Window textures -->
+	<texture id="10" filename="textures/w_01_1.png" />
+	<texture id="11" filename="textures/w_01_2.png" />
+	<texture id="12" filename="textures/w_01_3.png" />
+	<texture id="13" filename="textures/w_03_1.png" />
+	<texture id="14" filename="textures/w_03_2.png" />
+	<!-- Roof textures -->
+	<texture id="20" filename="textures/roofs_01_d.png" />
+	<!-- Basement textures-->
+	<texture id="30" filename="textures/concrete_01_d.png" />
+<textures>
+
+<!-- Buildings -->
+<buildings>
+	<building type="villa" perimeter="0.0">
+		<basement height="3.0" />
+		<roof height="6.0" />
+		<window offset="0.1" />
+		<materials>
+			<material wall="1" window="10" roof="20" basement="30"/> 
+		<materials>
+	</building>
+	<building type="industry" perimeter="70.0">	
+		<basement height="3.0"/>
+		<roof height="10.0" />
+	<building>
+</buildings>

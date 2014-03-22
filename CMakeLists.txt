@@ -4,6 +4,15 @@ SET(CMAKE_ECLIPSE_GENERATE_LINKED_RESOURCES FALSE)
 
 PROJECT(Map2Building)
 
+# Only enable release and debug builds
+IF(CMAKE_CONFIGURATION_TYPES)
+   SET(CMAKE_CONFIGURATION_TYPES Debug Release)
+   set(CMAKE_CONFIGURATION_TYPES "${CMAKE_CONFIGURATION_TYPES}" CACHE STRING
+     "Reset the configurations to what we need"
+     FORCE)
+ENDIF()
+
+
 # Show relative paths options
 OPTION(CMAKE_USE_RELATIVE_PATHS "If true, cmake will use relative paths in makefiles and projects." ON)
 
@@ -35,6 +44,7 @@ FIND_PACKAGE( OpenSceneGraph REQUIRED osgViewer osgDB osgGA)
 INCLUDE_DIRECTORIES(BEFORE
     ${OPENGL_INCLUDE_DIR}
     ${OPENSCENEGRAPH_INCLUDE_DIR}
+	${OSG_THIRD_PARTY_DIR}/include
 )
 
 ###############################################################################

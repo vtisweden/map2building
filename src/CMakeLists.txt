@@ -4,12 +4,20 @@ SET(TARGET_TARGETNAME Map2Building)
 # Target source files
 SET(TARGET_SRC
 	main.cpp
-	
+	building.cpp
+	buildinglibrary.cpp
+	shapeworld.cpp
+	texturelibrary.cpp
+
 	pugixml.cpp
 )
 
 # Target headerfiles
 SET(TARGET_H
+	building.h
+	buildinglibrary.h
+	shapeworld.h
+	texturelibrary.h
 
 	pugiconfig.hpp
 	pugixml.hpp
@@ -31,6 +39,8 @@ TARGET_LINK_LIBRARIES(${TARGET_TARGETNAME}  ${OPENGL_LIBRARIES} )
 # Link to OpenSceneGraph libs
 TARGET_LINK_LIBRARIES(${TARGET_TARGETNAME}  ${OPENSCENEGRAPH_LIBRARIES} )
 
+# Link to GDAL libs
+TARGET_LINK_LIBRARIES(${TARGET_TARGETNAME}  "${OSG_THIRD_PARTY_DIR}/lib/gdal_i.lib" )
 
 ####################################################################
 # Create user file for correct environment string
