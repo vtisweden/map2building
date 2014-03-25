@@ -90,9 +90,18 @@ void WorldBuilder::buildWorld() {
 	int tilenumber = 0;
 	ShapeWorldVectorIterator shapeIt;
 	for (shapeIt = m_shapeTiles.begin(); shapeIt != m_shapeTiles.end(); ++shapeIt) {
-		osg::notify(osg::ALWAYS) << "Processed shape tile: " << ++tilenumber << " of " << m_shapeTiles.size() << std::endl;
+		osg::notify(osg::DEBUG_INFO) << "Processed shape tile: " << ++tilenumber << " of " << m_shapeTiles.size() << std::endl;
 		osg::ref_ptr<ShapeWorld> shapeWorld = (*shapeIt);
 		addPolygonsToHeight(shapeWorld->polygons());	
+	}
+
+	// Update height values for polygons
+	tilenumber = 0;
+	HeightTileVectorIterator heightIt;
+	for (heightIt = m_heightTiles.begin(); heightIt != m_heightTiles.end(); ++heightIt) {
+		osg::notify(osg::DEBUG_INFO) << "Update height in tile: " << ++tilenumber << " of " << m_heightTiles.size() << std::endl;
+		osg::ref_ptr<HeightTile> heightTile = (*heightIt);
+		heightTile->updatePolygonHeight();
 	}
 }
 
@@ -100,7 +109,7 @@ void WorldBuilder::addPolygonsToHeight(PolygonVector polygons) {
 	PolygonVectorIterator polygonIt;
 	int polygonNumber = 0;
 	for (polygonIt = polygons.begin(); polygonIt != polygons.end(); ++polygonIt) {
-		osg::notify(osg::ALWAYS) << "\tProcessed polygon: " << ++polygonNumber << " of " << polygons.size() << std::endl;
+		osg::notify(osg::DEBUG_INFO) << "\tProcessed polygon: " << ++polygonNumber << " of " << polygons.size() << std::endl;
 		osg::ref_ptr<Polygon> polygon = (*polygonIt);
 		HeightTileVectorIterator heightIt;
 		for (heightIt = m_heightTiles.begin(); heightIt != m_heightTiles.end(); ++heightIt) {
