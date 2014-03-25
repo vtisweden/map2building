@@ -8,8 +8,8 @@
 
 class Polygon : public osg::Referenced {
 public:
-	Polygon() : m_points(), m_center(osg::Vec2()), m_perimeter(0.0), m_dirtyPoints(true) {}
-	Polygon(osg::ref_ptr<osg::Vec2Array> points) : m_points(false), m_center(osg::Vec2()), m_perimeter(0.0), m_dirtyPoints(true) {};
+	Polygon() : m_points(), m_center(osg::Vec2()), m_height(0.0), m_perimeter(0.0), m_dirtyPoints(true) {}
+	Polygon(osg::ref_ptr<osg::Vec2Array> points) : m_points(false), m_center(osg::Vec2()), m_height(0.0), m_perimeter(0.0), m_dirtyPoints(true) {};
 	void push_back(osg::Vec2 point);
 
 	osg::Vec2 center();
@@ -28,5 +28,7 @@ protected:
 	bool m_dirtyPoints;
 };
 
+typedef std::vector< osg::ref_ptr<Polygon> > PolygonVector;
+typedef PolygonVector::iterator PolygonVectorIterator;
 
 #endif
