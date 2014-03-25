@@ -1,5 +1,9 @@
 #include "polygon.h"
 
+#include <osg/MatrixTransform>
+
+#include "buildinglibrary.h"
+
 void Polygon::push_back(osg::Vec2 point) {
 	if (!m_points) {
 		m_points = new osg::Vec2Array;
@@ -93,7 +97,7 @@ void PolygonTree::setBucketSize(size_t bucketSize) {
 void PolygonTree::balance() {
 	// If tree node has more polygons than allowed bucket size
 	if (m_polygons.size() > m_bucketSize) {
-		// Split tree and balance nodes
+		// half width and half height
 		double w2 = (m_maxX - m_minX)/2.0;
 		double h2 = (m_maxY - m_minY)/2.0;
 		PolygonVectorIterator it;
@@ -145,6 +149,42 @@ void PolygonTree::balance() {
 			m_southWest->balance();
 		}
 	} else {
-		osg::notify(osg::DEBUG_INFO) << "Number of polygon in leaf: " << m_polygons.size() << std::endl;
+		osg::notify(osg::DEBUG_INFO) << "Number of polygons in leaf: " << m_polygons.size() << std::endl;
 	}
+}
+
+osg::ref_ptr<osg::Group> PolygonTree::createBuildingTree() {
+	osg::ref_ptr<osg::MatrixTransform> matrixTransform = new osg::MatrixTransform;
+	//osg::Matrix matrix;
+
+
+	//matrix.setTrans(osg::Vec3(m_minX, 0, m_minY));
+	//matrixTransform->setMatrix(matrix);
+	// Should maybe use an own callback for bound calculations
+	// matrixTransform->setComputeBoundingSphereCallback()
+
+	// Since all information should be in the leaf nodes
+	if (m_polygons.empty()) {
+		if (m_northEast) {
+			matrixTransform->addChild(m_northEast->createBuildingTree());
+		}
+		if (m_northWest) {
+			matrixTransform->addChild(m_northWest->createBuildingTree());
+		}
+		if (m_southEast) {
+			matrixTransform->addChild(m_southEast->createBuildingTree());
+		}
+		if (m_southWest) {
+			matrixTransform->addChild(m_southWest->createBuildingTree());
+		}
+	} else {
+		// Build buildings
+		PolygonVectorIterator polygonIt;
+		for (polygonIt = m_polygons.begin(); polygonIt != m_polygons.end(); ++polygonIt) {
+			osg::ref_ptr<Polygon> polygon = (*polygonIt);
+			matrixTransform->addChild(BuildingLibrary::instance().buildingFromPolygon(polygon, osg::Vec2(0, 0)));
+		}
+	}
+
+	return matrixTransform;
 }

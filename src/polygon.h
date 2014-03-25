@@ -7,6 +7,7 @@
 #include <osg/Vec2>
 #include <osg/Array>
 #include <osg/BoundingBox>
+#include <osg/Group>
 
 class Polygon : public osg::Referenced {
 public:
@@ -19,6 +20,8 @@ public:
 	
 	void setHeight(double height) { m_height = height; }
 	double height() const { return m_height; }
+	osg::ref_ptr<osg::Vec2Array> points() const { return m_points; }
+
 protected:
 	~Polygon() {};
 	void calculateCenterAndPerimeter();
@@ -45,6 +48,7 @@ public:
 	void addPolygon(osg::ref_ptr<Polygon> polygon);
 	void setBucketSize(size_t bucketSize);
 	void balance();
+	osg::ref_ptr<osg::Group> createBuildingTree();
 protected:
 	~PolygonTree() {};
 
