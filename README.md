@@ -16,6 +16,4 @@ PugiXML is licensed according to the MIT-license
 
 Contributors
 ------------
-Carl Johan Andhill
-
 Björn Blissing
