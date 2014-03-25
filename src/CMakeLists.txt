@@ -6,9 +6,11 @@ SET(TARGET_SRC
 	main.cpp
 	building.cpp
 	buildinglibrary.cpp
+	heighttile.cpp
+	polygon.cpp
 	shapeworld.cpp
 	texturelibrary.cpp
-
+	# XML Library
 	pugixml.cpp
 )
 
@@ -16,9 +18,11 @@ SET(TARGET_SRC
 SET(TARGET_H
 	building.h
 	buildinglibrary.h
+	heighttile.h
+	polygon.h
 	shapeworld.h
 	texturelibrary.h
-
+	# XML Library
 	pugiconfig.hpp
 	pugixml.hpp
 )
@@ -26,6 +30,10 @@ SET(TARGET_H
 #####################################################################
 # Create executable
 #####################################################################
+
+IF(MSVC)
+	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4251")
+ENDIF(MSVC)
 
 ADD_EXECUTABLE(${TARGET_TARGETNAME} ${TARGET_SRC} ${TARGET_H})
 
