@@ -11,7 +11,7 @@ class HeightTile : public osg::Referenced {
 public:
 	HeightTile(std::string filename);
 	bool addPolygon(osg::ref_ptr<Polygon> polygon);
-	std::vector < osg::ref_ptr<Polygon> > getPolygonList() const { return m_polygons; }
+	PolygonVector getPolygonList() const { return m_polygons; }
 	void updatePolygonHeight();
 protected:
 	~HeightTile() {};
@@ -29,7 +29,7 @@ protected:
 	double m_invgeotransform[6];
 	bool m_validExtents;
 
-	std::vector< osg::ref_ptr<Polygon> > m_polygons;
+	PolygonVector m_polygons;
 };
 
 #endif

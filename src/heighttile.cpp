@@ -71,7 +71,7 @@ void HeightTile::updatePolygonHeight() {
 
 
 	// Get height for every polygon in list 
-	std::vector< osg::ref_ptr<Polygon> >::iterator it;
+	PolygonVectorIterator it;
 	for (it = m_polygons.begin(); it != m_polygons.end(); ++it) {
 		osg::ref_ptr<Polygon> polygon = (*it);
 		// Get height at center pos;
