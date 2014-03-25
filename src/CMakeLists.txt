@@ -10,6 +10,7 @@ SET(TARGET_SRC
 	polygon.cpp
 	shapeworld.cpp
 	texturelibrary.cpp
+	worldbuilder.cpp
 	# XML Library
 	pugixml.cpp
 )
@@ -22,6 +23,7 @@ SET(TARGET_H
 	polygon.h
 	shapeworld.h
 	texturelibrary.h
+	worldbuilder.h
 	# XML Library
 	pugiconfig.hpp
 	pugixml.hpp

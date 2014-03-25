@@ -6,28 +6,23 @@
  */
 
 #include <osg/ArgumentParser>
+#include "worldbuilder.h"
 
-#include "shapeworld.h"
- 
 int main( int argc, char** argv )
 {
 	// use an ArgumentParser object to manage the program arguments.
 	osg::ArgumentParser arguments(&argc,argv);
 
+	
+
 	// Load configuration file
-
-	// Load texture definitions
-
-	// Load building definitions
-
-	// Load shape file
-	osg::ref_ptr<ShapeWorld> shapeWorld = new ShapeWorld;
-	arguments.getApplicationUsage()->addCommandLineOption("-shape","Path for shape file");
-	std::string shapeFile;
-	arguments.read("-shape",shapeFile);
-	shapeWorld->loadShapeFile(shapeFile);
-
-	// Build houses from shape file information
+	arguments.getApplicationUsage()->addCommandLineOption("-config","Path for configuration file");
+	std::string configFile;
+	arguments.read("-config",configFile);
+	if (!configFile.empty()) {
+		osg::ref_ptr<WorldBuilder> worldBuilder = new WorldBuilder(configFile);
+		worldBuilder->loadConfiguration();
+	}
 
 	return 0;
 }
