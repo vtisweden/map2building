@@ -25,4 +25,8 @@ protected:
 
 	PolygonVector m_polygons;
 };
+
+typedef std::vector< osg::ref_ptr<ShapeWorld> > ShapeWorldVector;
+typedef ShapeWorldVector::iterator ShapeWorldVectorIterator;
+
 #endif
