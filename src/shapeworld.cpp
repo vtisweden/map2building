@@ -22,7 +22,7 @@ bool ShapeWorld::loadShapeFile(const std::string& filename) {
 	ogrLayer->ResetReading();	
 
 	int	numberOfBuildings = ogrLayer->GetFeatureCount();
-	osg::notify(osg::ALWAYS) << "Number of buildings in shape file: " << numberOfBuildings << std::endl;
+	osg::notify(osg::DEBUG_INFO) << "Number of buildings in shape file: " << numberOfBuildings << std::endl;
 	
 	// Load polygons
 	loadPolygons(ogrLayer);
