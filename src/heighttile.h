@@ -21,6 +21,8 @@ protected:
 
 
 	std::string m_filename;
+	int m_rasterSizeX;
+	int m_rasterSizeY;
 	double m_minX;
 	double m_maxX;
 	double m_minY;

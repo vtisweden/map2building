@@ -1,6 +1,8 @@
 #include "heighttile.h"
 
 HeightTile::HeightTile(std::string filename) : m_filename(filename),
+	m_rasterSizeX(0),
+	m_rasterSizeY(0),
 	m_minX(0.0),
 	m_maxX(0.0),
 	m_minY(0.0),
@@ -35,9 +37,10 @@ void HeightTile::getExtents() {
 		return;
 	}
 	
-
-	double width = (double) dataset->GetRasterXSize();
-	double height = (double) dataset->GetRasterYSize();
+	m_rasterSizeX = dataset->GetRasterXSize();
+	m_rasterSizeY = dataset->GetRasterYSize();
+	double width = (double) m_rasterSizeX;
+	double height = (double) m_rasterSizeY;
 	dataset->GetGeoTransform(m_geotransform);
 	GDALInvGeoTransform(m_geotransform, m_invgeotransform);	
 	// Get extents and set extents to valid
@@ -56,6 +59,9 @@ void HeightTile::getExtents() {
 }
 
 void HeightTile::updatePolygonHeight() {
+	// If there is no polygons there is no need to open any files
+	if (m_polygons.empty()) return;
+
 	// Try to open file
 	GDALAllRegister();
 
@@ -90,8 +96,25 @@ double HeightTile::getInterpolatedValue(GDALRasterBand* band, double x, double y
 	// Transform from lat & long to row & column.
 	GDALApplyGeoTransform(m_invgeotransform, x, y, &column, &row);
 	
+	// Clamp to edge
+	double eps = 0.0001;
+	if (osg::equivalent(column, 0, eps)) column = 0.0;
+	if (osg::equivalent(row, 0, eps)) row = 0.0;
+	if (osg::equivalent(column, (double) m_rasterSizeX, eps)) column = (double) m_rasterSizeX;
+	if (osg::equivalent(row, (double) m_rasterSizeY, eps)) column = (double) m_rasterSizeY;
+
 	double result = 0.0;
-	band->RasterIO(GF_Read, (int)osg::round(column), (int)osg::round(row), 1, 1, &result,1, 1, GDT_Float64, 0, 0);
+
+	int column_int = (int)osg::round(column);
+	int row_int = (int)osg::round(row);
+
+	// Clamp to edge
+	if (column_int >= m_rasterSizeX) column_int = (m_rasterSizeX - 1);
+	if (row_int >= m_rasterSizeY) row_int = (m_rasterSizeY - 1);
+	if (column_int < 0) column_int = 0;
+	if (row_int < 0) row_int = 0;
+
+	band->RasterIO(GF_Read, column_int, row_int, 1, 1, &result,1, 1, GDT_Float64, 0, 0);
 
 	// Assume that we always get valid values
 	// It would probably be good to add some error handling
