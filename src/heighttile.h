@@ -32,4 +32,7 @@ protected:
 	PolygonVector m_polygons;
 };
 
+typedef std::vector< osg::ref_ptr<HeightTile> > HeightTileVector;
+typedef HeightTileVector::iterator HeightTileVectorIterator;
+
 #endif
