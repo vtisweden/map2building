@@ -22,6 +22,7 @@ int main( int argc, char** argv )
 	if (!configFile.empty()) {
 		osg::ref_ptr<WorldBuilder> worldBuilder = new WorldBuilder(configFile);
 		worldBuilder->loadConfiguration();
+		worldBuilder->buildWorld();
 	}
 
 	return 0;

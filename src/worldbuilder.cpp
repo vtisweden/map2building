@@ -4,6 +4,7 @@
 #include <osgDB/FileNameUtils>
 
 #include "pugixml.hpp"
+#include "heighttile.h"
 
 void WorldBuilder::loadConfiguration() {
 	
@@ -55,3 +56,56 @@ void WorldBuilder::loadConfiguration() {
 		osg::notify(osg::WARN) << "Warning: Could not read configuration file:" << m_filename << std::endl;
 	}
 }
+
+void WorldBuilder::buildWorld() {
+	// Load height files
+	std::vector<std::string>::iterator it;
+	int filenumber = 0;
+	for (it = m_heigthFilenames.begin(); it != m_heigthFilenames.end(); ++it) {
+		osg::notify(osg::DEBUG_INFO) << "Reading height file: " << ++filenumber << " of " << m_heigthFilenames.size() << std::endl;
+		std::string heightFilename = osgDB::findDataFile(*it);
+		if (!heightFilename.empty()) {
+			osg::ref_ptr<HeightTile> heightTile = new HeightTile(heightFilename);
+			m_heightTiles.push_back(heightTile);
+		} else {
+			osg::notify(osg::WARN) << "Warning: Could not find height data file: " << (*it) << std::endl;
+		}
+	}
+
+	// Load shape files and populate height files with polygons
+	filenumber = 0;
+	for (it = m_shapeFilenames.begin(); it != m_shapeFilenames.end(); ++it) {
+		osg::notify(osg::DEBUG_INFO) << "Reading shape file: " << ++filenumber << " of " << m_shapeFilenames.size() << std::endl;
+		std::string shapeFilename = osgDB::findDataFile(*it);
+		if (!shapeFilename.empty()) {
+			osg::ref_ptr<ShapeWorld> shapeWorld = new ShapeWorld();
+			shapeWorld->loadShapeFile(shapeFilename);
+			m_shapeTiles.push_back(shapeWorld);
+		} else {
+			osg::notify(osg::WARN) << "Warning: Could not find shape file: " << (*it) << std::endl;
+		}
+	}
+
+	// Extract polygons from shape tiles
+	int tilenumber = 0;
+	ShapeWorldVectorIterator shapeIt;
+	for (shapeIt = m_shapeTiles.begin(); shapeIt != m_shapeTiles.end(); ++shapeIt) {
+		osg::notify(osg::ALWAYS) << "Processed shape tile: " << ++tilenumber << " of " << m_shapeTiles.size() << std::endl;
+		osg::ref_ptr<ShapeWorld> shapeWorld = (*shapeIt);
+		addPolygonsToHeight(shapeWorld->polygons());	
+	}
+}
+
+void WorldBuilder::addPolygonsToHeight(PolygonVector polygons) {
+	PolygonVectorIterator polygonIt;
+	int polygonNumber = 0;
+	for (polygonIt = polygons.begin(); polygonIt != polygons.end(); ++polygonIt) {
+		osg::notify(osg::ALWAYS) << "\tProcessed polygon: " << ++polygonNumber << " of " << polygons.size() << std::endl;
+		osg::ref_ptr<Polygon> polygon = (*polygonIt);
+		HeightTileVectorIterator heightIt;
+		for (heightIt = m_heightTiles.begin(); heightIt != m_heightTiles.end(); ++heightIt) {
+			osg::ref_ptr<HeightTile> heightTile = (*heightIt);
+			if (heightTile->addPolygon(polygon)) break;
+		}
+	}
+} 
