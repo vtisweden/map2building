@@ -69,3 +69,82 @@ double Polygon::perimeter() {
 	}
 	return m_perimeter;
 }
+
+void PolygonTree::addPolygon(osg::ref_ptr<Polygon> polygon) {
+	// Check bound
+	if (polygon->center().x() < m_minX) m_minX = polygon->center().x();
+	if (polygon->center().x() > m_maxX) m_maxX = polygon->center().x();
+	if (polygon->center().y() < m_minY) m_minY = polygon->center().y();
+	if (polygon->center().x() > m_maxX) m_maxY = polygon->center().y();
+	m_polygons.push_back(polygon);
+}
+
+void PolygonTree::setBucketSize(size_t bucketSize) {
+	if (bucketSize == 0) {
+		osg::notify(osg::WARN) << "Warning: Bucket size of 0 not allowed!" << std::endl;
+	} else if (bucketSize < 25) {
+		osg::notify(osg::WARN) << "Warning: Bucket size less than 25 is NOT recommended!" << std::endl;
+		m_bucketSize = bucketSize;
+	} else {
+		m_bucketSize = bucketSize;
+	}
+}
+
+void PolygonTree::balance() {
+	// If tree node has more polygons than allowed bucket size
+	if (m_polygons.size() > m_bucketSize) {
+		// Split tree and balance nodes
+		double w2 = (m_maxX - m_minX)/2.0;
+		double h2 = (m_maxY - m_minY)/2.0;
+		PolygonVectorIterator it;
+		for (it = m_polygons.begin(); it != m_polygons.end(); ++it) {
+			osg::ref_ptr<Polygon> polygon = (*it);
+			
+			if (polygon->center().x() > m_minX + w2) {
+				if (polygon->center().y() > m_minY + h2) {
+					// North East
+					if (!m_northEast) {
+						m_northEast = new PolygonTree;
+					}
+					m_northEast->addPolygon(polygon);
+				}else {
+					// South East
+					if (!m_southEast) {
+						m_southEast = new PolygonTree;
+					}
+					m_southEast->addPolygon(polygon);
+				}
+			} else {
+				if (polygon->center().y() > m_minY + h2) {
+					// North West
+					if (!m_northWest) {
+						m_northWest = new PolygonTree;
+					}
+					m_northWest->addPolygon(polygon);
+				}else {
+					// South West
+					if (!m_southWest) {
+						m_southWest = new PolygonTree;
+					}
+					m_southWest->addPolygon(polygon);
+				}
+			}
+		}
+		m_polygons.clear();
+		// See if branches need balancing
+		if (m_northEast) {
+			m_northEast->balance();
+		}
+		if (m_northWest) {
+			m_northWest->balance();
+		}
+		if (m_southEast) {
+			m_southEast->balance();
+		}
+		if (m_southWest) {
+			m_southWest->balance();
+		}
+	} else {
+		osg::notify(osg::DEBUG_INFO) << "Number of polygon in leaf: " << m_polygons.size() << std::endl;
+	}
+}

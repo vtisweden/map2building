@@ -1,6 +1,8 @@
 #ifndef _POLYGON_H_
 #define _POLYGON_H_
 
+#include <limits>
+
 #include <osg/Referenced>
 #include <osg/Vec2>
 #include <osg/Array>
@@ -30,5 +32,34 @@ protected:
 
 typedef std::vector< osg::ref_ptr<Polygon> > PolygonVector;
 typedef PolygonVector::iterator PolygonVectorIterator;
+
+
+class PolygonTree : public osg::Referenced {
+public: 
+	PolygonTree() : m_northEast(0), m_southEast(0), m_southWest(0), m_northWest(0), 
+		m_minX(std::numeric_limits<double>::max()),
+		m_maxX(std::numeric_limits<double>::min()),
+		m_minY(std::numeric_limits<double>::max()),
+		m_maxY(std::numeric_limits<double>::min()),
+		m_bucketSize(100) {};
+	void addPolygon(osg::ref_ptr<Polygon> polygon);
+	void setBucketSize(size_t bucketSize);
+	void balance();
+protected:
+	~PolygonTree() {};
+
+	osg::ref_ptr<PolygonTree> m_northEast;
+	osg::ref_ptr<PolygonTree> m_southEast;
+	osg::ref_ptr<PolygonTree> m_southWest;
+	osg::ref_ptr<PolygonTree> m_northWest;
+
+	double m_minX;
+	double m_maxX;
+	double m_minY;
+	double m_maxY;
+
+	size_t m_bucketSize;
+	PolygonVector m_polygons;
+};
 
 #endif
