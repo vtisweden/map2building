@@ -2,6 +2,7 @@
 
 #include <osgDB/FileUtils>
 #include <osgDB/FileNameUtils>
+#include <osgDB/WriteFile>
 
 #include "pugixml.hpp"
 #include "heighttile.h"
@@ -21,14 +22,12 @@ void WorldBuilder::loadConfiguration() {
 	if (pugi::xml_node configurationNode = doc.child("configuration")) {
 		// Textures
 		if (pugi::xml_node texturesNode = configurationNode.child("textures")) {
-			m_textureLibrary = new TextureLibrary;
-			m_textureLibrary->load(texturesNode);
+			TextureLibrary::instance().load(texturesNode);
 		}
 
 		// Buildings
 		if (pugi::xml_node buildingsNode = configurationNode.child("buildings")) {
-			m_buildingLibrary = new BuildingLibrary;
-			m_buildingLibrary->load(buildingsNode);
+			BuildingLibrary::instance().load(buildingsNode);
 		}
 
 		// Shapes
@@ -128,6 +127,11 @@ void WorldBuilder::buildWorld() {
 	osg::notify(osg::ALWAYS) << "Balancing polygon tree..." << std::endl;
 	polygonTree->balance();
 
+	osg::notify(osg::ALWAYS) << "Create buildings from polygon tree..." << std::endl;
+	osg::ref_ptr<osg::Group> worldGroup = polygonTree->createBuildingTree();
+	
+	osg::notify(osg::ALWAYS) << "Write models as output..." << std::endl;
+	osgDB::writeNodeFile(*worldGroup, "d:/temp/building.osgb");
 
 }
 
