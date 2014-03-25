@@ -59,6 +59,7 @@ void WorldBuilder::loadConfiguration() {
 
 void WorldBuilder::buildWorld() {
 	// Load height files
+	osg::notify(osg::ALWAYS) << "Reading height file(s)..." << std::endl;
 	std::vector<std::string>::iterator it;
 	int filenumber = 0;
 	for (it = m_heigthFilenames.begin(); it != m_heigthFilenames.end(); ++it) {
@@ -73,6 +74,7 @@ void WorldBuilder::buildWorld() {
 	}
 
 	// Load shape files and populate height files with polygons
+	osg::notify(osg::ALWAYS) << "Reading shape file(s)..." << std::endl;
 	filenumber = 0;
 	for (it = m_shapeFilenames.begin(); it != m_shapeFilenames.end(); ++it) {
 		osg::notify(osg::DEBUG_INFO) << "Reading shape file: " << ++filenumber << " of " << m_shapeFilenames.size() << std::endl;
@@ -87,6 +89,7 @@ void WorldBuilder::buildWorld() {
 	}
 
 	// Extract polygons from shape tiles
+	osg::notify(osg::ALWAYS) << "Extracting polygons..." << std::endl;
 	int tilenumber = 0;
 	ShapeWorldVectorIterator shapeIt;
 	for (shapeIt = m_shapeTiles.begin(); shapeIt != m_shapeTiles.end(); ++shapeIt) {
@@ -96,6 +99,7 @@ void WorldBuilder::buildWorld() {
 	}
 
 	// Update height values for polygons
+	osg::notify(osg::ALWAYS) << "Update heights in polygons..." << std::endl;
 	tilenumber = 0;
 	HeightTileVectorIterator heightIt;
 	for (heightIt = m_heightTiles.begin(); heightIt != m_heightTiles.end(); ++heightIt) {
@@ -103,6 +107,28 @@ void WorldBuilder::buildWorld() {
 		osg::ref_ptr<HeightTile> heightTile = (*heightIt);
 		heightTile->updatePolygonHeight();
 	}
+
+	// Build balanced tree for polygons
+	osg::notify(osg::ALWAYS) << "Build polygon tree..." << std::endl;
+	osg::ref_ptr<PolygonTree> polygonTree = new PolygonTree;
+	for (heightIt = m_heightTiles.begin(); heightIt != m_heightTiles.end(); ++heightIt) {
+		osg::notify(osg::DEBUG_INFO) << "Getting polygons from height tile: " << ++tilenumber << " of " << m_heightTiles.size() << std::endl;
+		osg::ref_ptr<HeightTile> heightTile = (*heightIt);
+		PolygonVector polygons = heightTile->polygons();
+		if (!polygons.empty()) {
+			PolygonVectorIterator polygonIt;
+			for (polygonIt = polygons.begin(); polygonIt != polygons.end(); ++polygonIt) {
+				osg::ref_ptr<Polygon> polygon = (*polygonIt);
+				polygonTree->addPolygon(polygon);
+			}
+		}
+	}
+
+	// Balance polygon tree
+	osg::notify(osg::ALWAYS) << "Balancing polygon tree..." << std::endl;
+	polygonTree->balance();
+
+
 }
 
 void WorldBuilder::addPolygonsToHeight(PolygonVector polygons) {
