@@ -30,10 +30,10 @@ void Building::load(pugi::xml_node buildingNode) {
 		}
 	}
 
-	osg::notify(osg::ALWAYS) << "Building Type:     " << type << std::endl;
-	osg::notify(osg::ALWAYS) << "Basement height:   " << m_basementHeight << std::endl;
-	osg::notify(osg::ALWAYS) << "Roof height:       " << m_roofHeight << std::endl;
-	osg::notify(osg::ALWAYS) << "Window offset:     " << m_windowOffset << std::endl;
-	osg::notify(osg::ALWAYS) << "Materialsets:      " << m_materials.size() << std::endl;
-	osg::notify(osg::ALWAYS) << std::endl;
+	osg::notify(osg::DEBUG_INFO) << "Building Type:     " << type << std::endl;
+	osg::notify(osg::DEBUG_INFO) << "Basement height:   " << m_basementHeight << std::endl;
+	osg::notify(osg::DEBUG_INFO) << "Roof height:       " << m_roofHeight << std::endl;
+	osg::notify(osg::DEBUG_INFO) << "Window offset:     " << m_windowOffset << std::endl;
+	osg::notify(osg::DEBUG_INFO) << "Material sets:     " << m_materials.size() << std::endl;
+	osg::notify(osg::DEBUG_INFO) << std::endl;
 }
