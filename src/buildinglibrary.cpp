@@ -2,13 +2,12 @@
 
 #include <osg/notify>
 
-osg::ref_ptr<Building> BuildingLibrary::getBuildingFromPerimeter(double perimeter) const {
-	std::map<double, osg::ref_ptr<Building> >::const_iterator it;
+osg::ref_ptr<Building> BuildingLibrary::getBuildingFromPerimeter(double perimeter) {
+	BuildingMapIterator it;
 	osg::ref_ptr<Building> building = 0;
-	for (it != m_buildingMap.begin(); it != m_buildingMap.end(); ++it) {
-		if (perimeter > (*it).first)
-			break;
+	for (it = m_buildingMap.begin(); it != m_buildingMap.end(); ++it) {
 		building = (*it).second;
+		if (perimeter > (*it).first) break;
 	}
 	
 	return building;
@@ -31,4 +30,9 @@ bool BuildingLibrary::addBuildingWithPerimeter(double perimeter, osg::ref_ptr<Bu
 	}
 	osg::notify(osg::WARN) << "Warning: Cannot add building. Perimeter already in use: " << perimeter << std::endl;
 	return false;
+}
+
+osg::ref_ptr<osg::Group> BuildingLibrary::buildingFromPolygon(osg::ref_ptr<Polygon> polygon, osg::Vec2 baseCoordinate) {
+	osg::ref_ptr<Building> building = getBuildingFromPerimeter(polygon->perimeter());
+	return building ? building->createFromPolygon(polygon, baseCoordinate) : 0;
 }
