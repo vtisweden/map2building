@@ -95,13 +95,6 @@ double HeightTile::getInterpolatedValue(GDALRasterBand* band, double x, double y
 	
 	// Transform from lat & long to row & column.
 	GDALApplyGeoTransform(m_invgeotransform, x, y, &column, &row);
-	
-	// Clamp to edge
-	double eps = 0.0001;
-	if (osg::equivalent(column, 0, eps)) column = 0.0;
-	if (osg::equivalent(row, 0, eps)) row = 0.0;
-	if (osg::equivalent(column, (double) m_rasterSizeX, eps)) column = (double) m_rasterSizeX;
-	if (osg::equivalent(row, (double) m_rasterSizeY, eps)) column = (double) m_rasterSizeY;
 
 	double result = 0.0;
 
