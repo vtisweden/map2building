@@ -107,7 +107,7 @@ void Building::createVertexAndNormal(osg::Vec2 point1, osg::Vec2 point2, double 
 		vertexArray->push_back(vertex4);
 		vertexArray->push_back(vertex3);
 		// Normals
-		osg::Vec3 normal = (vertex2 - vertex1)^(vertex3-vertex1);
+		osg::Vec3 normal = (vertex3-vertex1)^(vertex2 - vertex1);
 		normalArray->push_back(normal);
 		normalArray->push_back(normal);
 		normalArray->push_back(normal);
