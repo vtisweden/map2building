@@ -39,12 +39,12 @@ typedef PolygonVector::iterator PolygonVectorIterator;
 
 class PolygonTree : public osg::Referenced {
 public: 
-	PolygonTree() : m_northEast(0), m_southEast(0), m_southWest(0), m_northWest(0), 
+	PolygonTree(size_t bucketSize = 100) : m_northEast(0), m_southEast(0), m_southWest(0), m_northWest(0), 
 		m_minX(std::numeric_limits<double>::max()),
 		m_maxX(std::numeric_limits<double>::min()),
 		m_minY(std::numeric_limits<double>::max()),
 		m_maxY(std::numeric_limits<double>::min()),
-		m_bucketSize(100) {};
+		m_bucketSize(bucketSize) {};
 	void addPolygon(osg::ref_ptr<Polygon> polygon);
 	void setBucketSize(size_t bucketSize);
 	void balance();

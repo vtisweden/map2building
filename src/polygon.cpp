@@ -94,6 +94,7 @@ void PolygonTree::setBucketSize(size_t bucketSize) {
 		osg::notify(osg::WARN) << "Warning: Bucket size less than 25 is NOT recommended!" << std::endl;
 		m_bucketSize = bucketSize;
 	} else {
+		osg::notify(osg::DEBUG_INFO) << "Bucket size set to:" << bucketSize << std::endl;
 		m_bucketSize = bucketSize;
 	}
 }
@@ -112,13 +113,13 @@ void PolygonTree::balance() {
 				if (polygon->center().y() > m_minY + h2) {
 					// North East
 					if (!m_northEast) {
-						m_northEast = new PolygonTree;
+						m_northEast = new PolygonTree(m_bucketSize);
 					}
 					m_northEast->addPolygon(polygon);
 				}else {
 					// South East
 					if (!m_southEast) {
-						m_southEast = new PolygonTree;
+						m_southEast = new PolygonTree(m_bucketSize);
 					}
 					m_southEast->addPolygon(polygon);
 				}
@@ -126,13 +127,13 @@ void PolygonTree::balance() {
 				if (polygon->center().y() > m_minY + h2) {
 					// North West
 					if (!m_northWest) {
-						m_northWest = new PolygonTree;
+						m_northWest = new PolygonTree(m_bucketSize);
 					}
 					m_northWest->addPolygon(polygon);
 				}else {
 					// South West
 					if (!m_southWest) {
-						m_southWest = new PolygonTree;
+						m_southWest = new PolygonTree(m_bucketSize);
 					}
 					m_southWest->addPolygon(polygon);
 				}
