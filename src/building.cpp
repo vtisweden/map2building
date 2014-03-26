@@ -82,14 +82,14 @@ osg::ref_ptr<osg::Geometry> Building::buildWall(osg::ref_ptr<Polygon> polygon, o
 	// Add vertex and normals from points
 	size_t numberOfPoints = polygon->points()->size();
 	for (size_t p = 0; p < (numberOfPoints - 1); ++p) {
-		osg::Vec2 point1 = polygon->points()->at(p);
-		osg::Vec2 point2 = polygon->points()->at(p+1);
+		osg::Vec2 point1 = polygon->points()->at(p) - baseCoordinate;
+		osg::Vec2 point2 = polygon->points()->at(p+1) - baseCoordinate;
 		createVertexAndNormal(point1, point2, h1, h2, vertexArray, normalArray);
 	}
 
 	// Add first point to close loop
-	osg::Vec2 point1 = polygon->points()->at(numberOfPoints-1);
-	osg::Vec2 point2 = polygon->points()->at(0);
+	osg::Vec2 point1 = polygon->points()->at(numberOfPoints-1) - baseCoordinate;
+	osg::Vec2 point2 = polygon->points()->at(0) - baseCoordinate;
 	createVertexAndNormal(point1, point2, h1, h2, vertexArray, normalArray);
 
 	osg::ref_ptr<osg::Geometry> wallGeometry = new osg::Geometry;
