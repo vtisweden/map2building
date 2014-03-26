@@ -1,6 +1,10 @@
 #include "polygon.h"
 
+#include <sstream>
+
 #include <osg/MatrixTransform>
+#include <osg/ProxyNode>
+#include <osgDB/WriteFile>
 
 #include "buildinglibrary.h"
 
@@ -183,11 +187,33 @@ osg::ref_ptr<osg::Group> PolygonTree::createBuildingTree(osg::Vec2 parentTileOri
 		}
 	} else {
 		// Build buildings
+		osg::ref_ptr<osg::Group> buildingGroup = new osg::Group;
 		PolygonVectorIterator polygonIt;
 		for (polygonIt = m_polygons.begin(); polygonIt != m_polygons.end(); ++polygonIt) {
 			osg::ref_ptr<Polygon> polygon = (*polygonIt);
-			matrixTransform->addChild(BuildingLibrary::instance().buildingFromPolygon(polygon, osg::Vec2(globalMin)));
+			buildingGroup->addChild(BuildingLibrary::instance().buildingFromPolygon(polygon, osg::Vec2(globalMin)));
 		}
+
+		// Create filename and save tile as file
+		std::stringstream filename;
+		filename << "c:/temp/tile";
+		filename << "_" << (int)osg::round(m_minX);
+		filename << "_" << (int)osg::round(m_minY);
+		filename << "_" << (int)osg::round(m_maxX);
+		filename << "_" << (int)osg::round(m_maxY);
+		filename << ".osgb";
+	
+		if (buildingGroup.valid()) {
+			osgDB::writeNodeFile(*buildingGroup, filename.str());
+		}
+
+		// Create proxy node
+		osg::ref_ptr<osg::ProxyNode> proxyNode = new osg::ProxyNode;
+		proxyNode->setLoadingExternalReferenceMode (osg::ProxyNode::DEFER_LOADING_TO_DATABASE_PAGER); 	
+		proxyNode->setFileName(0, filename.str());
+		proxyNode->setRadius(buildingGroup->getBound().radius());
+		proxyNode->setCenter(buildingGroup->getBound().center());
+		matrixTransform->addChild(proxyNode);
 	}
 
 	return matrixTransform;
