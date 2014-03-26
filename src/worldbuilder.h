@@ -23,7 +23,7 @@ protected:
 
 	HeightTileVector m_heightTiles;
 	ShapeWorldVector m_shapeTiles;
-	
+	PolygonVector m_polygonsOutsideTiles;
 };
 
 #endif

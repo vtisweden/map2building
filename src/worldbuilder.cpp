@@ -123,6 +123,16 @@ void WorldBuilder::buildWorld() {
 		}
 	}
 
+	// Add polygons that are outside height tiles to tree
+	if (!m_polygonsOutsideTiles.empty()) {
+		osg::notify(osg::ALWAYS) << "Polygons outside height tiles: " << m_polygonsOutsideTiles.size() << std::endl;
+		PolygonVectorIterator polygonIt;
+		for (polygonIt = m_polygonsOutsideTiles.begin(); polygonIt != m_polygonsOutsideTiles.end(); ++polygonIt) {
+			osg::ref_ptr<Polygon> polygon = (*polygonIt);
+			polygonTree->addPolygon(polygon);
+		}
+	}
+
 	// Balance polygon tree
 	osg::notify(osg::ALWAYS) << "Balancing polygon tree..." << std::endl;
 	polygonTree->balance();
@@ -131,7 +141,7 @@ void WorldBuilder::buildWorld() {
 	osg::ref_ptr<osg::Group> worldGroup = polygonTree->createBuildingTree();
 	
 	osg::notify(osg::ALWAYS) << "Write models as output..." << std::endl;
-	osgDB::writeNodeFile(*worldGroup, "d:/temp/building.osgb");
+	osgDB::writeNodeFile(*worldGroup, "c:/temp/building.osgb");
 
 }
 
@@ -141,10 +151,18 @@ void WorldBuilder::addPolygonsToHeight(PolygonVector polygons) {
 	for (polygonIt = polygons.begin(); polygonIt != polygons.end(); ++polygonIt) {
 		osg::notify(osg::DEBUG_INFO) << "\tProcessed polygon: " << ++polygonNumber << " of " << polygons.size() << std::endl;
 		osg::ref_ptr<Polygon> polygon = (*polygonIt);
+		bool foundMatchingTile = false;
 		HeightTileVectorIterator heightIt;
 		for (heightIt = m_heightTiles.begin(); heightIt != m_heightTiles.end(); ++heightIt) {
 			osg::ref_ptr<HeightTile> heightTile = (*heightIt);
-			if (heightTile->addPolygon(polygon)) break;
+			if (heightTile->addPolygon(polygon)) {
+				foundMatchingTile = true;
+				break;
+			}
+		}
+		if (!foundMatchingTile) {
+			m_polygonsOutsideTiles.push_back(polygon);
 		}
 	}
+
 } 
