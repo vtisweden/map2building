@@ -79,7 +79,7 @@ void PolygonTree::addPolygon(osg::ref_ptr<Polygon> polygon) {
 	if (polygon->center().x() < m_minX) m_minX = polygon->center().x();
 	if (polygon->center().x() > m_maxX) m_maxX = polygon->center().x();
 	if (polygon->center().y() < m_minY) m_minY = polygon->center().y();
-	if (polygon->center().x() > m_maxX) m_maxY = polygon->center().y();
+	if (polygon->center().y() > m_maxY) m_maxY = polygon->center().y();
 	m_polygons.push_back(polygon);
 }
 
@@ -153,36 +153,40 @@ void PolygonTree::balance() {
 	}
 }
 
-osg::ref_ptr<osg::Group> PolygonTree::createBuildingTree() {
+osg::ref_ptr<osg::Group> PolygonTree::createBuildingTree(osg::Vec2 parentTileOrigo) {
 	osg::ref_ptr<osg::MatrixTransform> matrixTransform = new osg::MatrixTransform;
-	//osg::Matrix matrix;
+	
+	osg::Vec2 globalMin = osg::Vec2(m_minX, m_minY);
 
-
-	//matrix.setTrans(osg::Vec3(m_minX, 0, m_minY));
-	//matrixTransform->setMatrix(matrix);
+	osg::Vec2 localMin = globalMin - parentTileOrigo;
+	
+	osg::Matrix matrix;
+	matrix.setTrans(osg::Vec3(localMin.x(), 0.0, localMin.y()));
+	matrixTransform->setMatrix(matrix);
+	
 	// Should maybe use an own callback for bound calculations
 	// matrixTransform->setComputeBoundingSphereCallback()
 
 	// Since all information should be in the leaf nodes
 	if (m_polygons.empty()) {
 		if (m_northEast) {
-			matrixTransform->addChild(m_northEast->createBuildingTree());
+			matrixTransform->addChild(m_northEast->createBuildingTree(globalMin));
 		}
 		if (m_northWest) {
-			matrixTransform->addChild(m_northWest->createBuildingTree());
+			matrixTransform->addChild(m_northWest->createBuildingTree(globalMin));
 		}
 		if (m_southEast) {
-			matrixTransform->addChild(m_southEast->createBuildingTree());
+			matrixTransform->addChild(m_southEast->createBuildingTree(globalMin));
 		}
 		if (m_southWest) {
-			matrixTransform->addChild(m_southWest->createBuildingTree());
+			matrixTransform->addChild(m_southWest->createBuildingTree(globalMin));
 		}
 	} else {
 		// Build buildings
 		PolygonVectorIterator polygonIt;
 		for (polygonIt = m_polygons.begin(); polygonIt != m_polygons.end(); ++polygonIt) {
 			osg::ref_ptr<Polygon> polygon = (*polygonIt);
-			matrixTransform->addChild(BuildingLibrary::instance().buildingFromPolygon(polygon, osg::Vec2(0, 0)));
+			matrixTransform->addChild(BuildingLibrary::instance().buildingFromPolygon(polygon, osg::Vec2(globalMin)));
 		}
 	}
 

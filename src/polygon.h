@@ -48,7 +48,7 @@ public:
 	void addPolygon(osg::ref_ptr<Polygon> polygon);
 	void setBucketSize(size_t bucketSize);
 	void balance();
-	osg::ref_ptr<osg::Group> createBuildingTree();
+	osg::ref_ptr<osg::Group> createBuildingTree(osg::Vec2 parentTileOrigo = osg::Vec2(0.0, 0.0));
 protected:
 	~PolygonTree() {};
 
