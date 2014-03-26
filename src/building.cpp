@@ -63,40 +63,54 @@ osg::ref_ptr<osg::Geode> Building::buildBasement(osg::ref_ptr<Polygon> polygon, 
 osg::ref_ptr<osg::Geometry> Building::buildWall(osg::ref_ptr<Polygon> polygon, osg::Vec2 baseCoordinate, double height) {
 	// Collect the verticies
 	osg::ref_ptr<osg::Vec3Array> vertexArray = new osg::Vec3Array;
+	osg::ref_ptr<osg::Vec3Array> normalArray = new osg::Vec3Array;
 	osg::Vec2Array::iterator it;
-	// 
-	for (it = polygon->points()->begin(); it != polygon->points()->end(); ++it) {
-		osg::Vec2 p = (*it);
-		vertexArray->push_back(osg::Vec3(p.x() - baseCoordinate.x(), polygon->height(), p.y()-baseCoordinate.y()));
+	
+	size_t numberOfPoints = polygon->points()->size();
+	double polygonHeight = polygon->height();
+	for (size_t p = 0; p < (numberOfPoints - 1); ++p) {
+		osg::Vec2 point1 = polygon->points()->at(p);
+		osg::Vec2 point2 = polygon->points()->at(p+1);
+		createVertexAndNormal(point1, point2, polygonHeight, height, vertexArray, normalArray);
 	}
-	size_t numberVerticiesInLayer = vertexArray->size();
-	// Extrude
-	for (it = polygon->points()->begin(); it != polygon->points()->end(); ++it) {
-		osg::Vec2 p = (*it);
-		vertexArray->push_back(osg::Vec3(p.x() - baseCoordinate.x(), polygon->height() + height, p.y()-baseCoordinate.y()));
-	}
+
+	// Add first point to close loop
+	osg::Vec2 point1 = polygon->points()->at(numberOfPoints-1);
+	osg::Vec2 point2 = polygon->points()->at(0);
+	createVertexAndNormal(point1, point2, polygonHeight, height, vertexArray, normalArray);
+
 	osg::ref_ptr<osg::Geometry> wallGeometry = new osg::Geometry;
 	wallGeometry->setVertexArray(vertexArray);
-	wallGeometry->addPrimitiveSet(new osg::DrawArrays(GL_POLYGON, 0 ,numberVerticiesInLayer));
-	wallGeometry->addPrimitiveSet(new osg::DrawArrays(GL_POLYGON, numberVerticiesInLayer ,numberVerticiesInLayer));
+	wallGeometry->addPrimitiveSet( new osg::DrawArrays(GL_QUADS, 0, vertexArray->size()) );
 
-	osgUtil::Tessellator tesselator;
-	tesselator.setTessellationType(osgUtil::Tessellator::TESS_TYPE_POLYGONS);
-	tesselator.setWindingType(osgUtil::Tessellator::TESS_WINDING_ODD);
-	tesselator.retessellatePolygons(*wallGeometry);
+	wallGeometry->setNormalArray(normalArray);
+	wallGeometry->setColorBinding(osg::Geometry::BIND_PER_VERTEX); 
+	
 
-	osg::ref_ptr<osg::DrawElementsUInt> sideIndices = new osg::DrawElementsUInt(GL_QUAD_STRIP);
-	for (size_t i = 0; i < numberVerticiesInLayer; ++i) {
-		sideIndices->push_back(i);
-		sideIndices->push_back((numberVerticiesInLayer-1-i) + numberVerticiesInLayer);
-	}
-	sideIndices->push_back(0);
-	sideIndices->push_back(numberVerticiesInLayer*2 - 1);
-
-	wallGeometry->addPrimitiveSet(sideIndices);
-
-	osgUtil::SmoothingVisitor::smooth(*wallGeometry);
-
+	osg::ref_ptr<osg::Vec4Array> colorArray = new osg::Vec4Array;
+	osg::Vec4 color = osg::Vec4(1.0, 1.0, 1.0, 1.0);
+	colorArray->push_back(color);
+	wallGeometry->setColorArray(colorArray);
+	wallGeometry->setColorBinding(osg::Geometry::BIND_OVERALL); 
+	
 	return wallGeometry;
+}
+
+void Building::createVertexAndNormal(osg::Vec2 point1, osg::Vec2 point2, double polygonHeight, double height, osg::ref_ptr<osg::Vec3Array> vertexArray, osg::ref_ptr<osg::Vec3Array> normalArray) {
+		osg::Vec3 vertex1 = osg::Vec3(point1.x(), polygonHeight, point1.y());
+		osg::Vec3 vertex2 = osg::Vec3(point1.x(), polygonHeight + height, point1.y());
+		osg::Vec3 vertex3 = osg::Vec3(point2.x(), polygonHeight, point2.y());
+		osg::Vec3 vertex4 = osg::Vec3(point2.x(), polygonHeight + height, point2.y());	
+		// Vertexs
+		vertexArray->push_back(vertex1);
+		vertexArray->push_back(vertex2);
+		vertexArray->push_back(vertex4);
+		vertexArray->push_back(vertex3);
+		// Normals
+		osg::Vec3 normal = (vertex2 - vertex1)^(vertex3-vertex1);
+		normalArray->push_back(normal);
+		normalArray->push_back(normal);
+		normalArray->push_back(normal);
+		normalArray->push_back(normal);
 }
 
