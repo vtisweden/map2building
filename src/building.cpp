@@ -97,7 +97,7 @@ osg::ref_ptr<osg::Geometry> Building::buildWall(osg::ref_ptr<Polygon> polygon, o
 	wallGeometry->addPrimitiveSet( new osg::DrawArrays(GL_QUADS, 0, vertexArray->size()) );
 
 	wallGeometry->setNormalArray(normalArray);
-	wallGeometry->setColorBinding(osg::Geometry::BIND_PER_VERTEX); 
+	wallGeometry->setNormalBinding(osg::Geometry::BIND_PER_VERTEX); 
 	
 
 	osg::ref_ptr<osg::Vec4Array> colorArray = new osg::Vec4Array;
@@ -119,10 +119,12 @@ void Building::createVertexAndNormal(osg::Vec2 point1, osg::Vec2 point2, double 
 	vertexArray->push_back(vertex4);
 	vertexArray->push_back(vertex3);
 	// Normals
-	osg::Vec3 normal = (vertex2 - vertex1)^(vertex3-vertex1);
+	osg::Vec3 normal = (vertex3 - vertex1)^(vertex2 - vertex1);
+	normal.normalize();
 	normalArray->push_back(normal);
 	normalArray->push_back(normal);
 	normalArray->push_back(normal);
 	normalArray->push_back(normal);
 }
+
 
