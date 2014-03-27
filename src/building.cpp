@@ -48,6 +48,9 @@ osg::ref_ptr<osg::Group> Building::createFromPolygon(osg::ref_ptr<Polygon> polyg
 	// Build walls
 	building->addChild(buildWalls(polygon, baseCoordinate));
 	// Build windows
+
+	// Build roof
+	building->addChild(buildRoof(polygon, baseCoordinate));
 	
 	
 	return building;
@@ -67,6 +70,46 @@ osg::ref_ptr<osg::Geode> Building::buildWalls(osg::ref_ptr<Polygon> polygon, osg
 	osg::ref_ptr<osg::Geometry> wallGeometry = buildWall(polygon, baseCoordinate, m_roofHeight, wallColor);
 	wallGeode->addDrawable(wallGeometry);
 	return wallGeode;
+}
+
+osg::ref_ptr<osg::Geode> Building::buildRoof(osg::ref_ptr<Polygon> polygon, osg::Vec2 baseCoordinate) {
+	osg::ref_ptr<osg::Geode> roofGeode = new osg::Geode;
+	osg::Vec4 roofColor = osg::Vec4(0.5, 0.5, 0.5, 1.0);
+	osg::ref_ptr<osg::Geometry> roofGeometry = new osg::Geometry();
+
+	// Calculate height of building
+	double height = polygon->height() + m_roofHeight;
+
+	// Add vertices to roof 
+	osg::ref_ptr<osg::Vec3Array> vertices = new osg::Vec3Array();
+	osg::ref_ptr<osg::Vec3Array> normalArray = new osg::Vec3Array();
+	size_t numberOfPoints = polygon->points()->size();
+	for (size_t p = 0; p < (numberOfPoints - 1); ++p) {
+		osg::Vec2 point = polygon->points()->at(p) - baseCoordinate;
+		vertices->push_back(osg::Vec3(point.x(), height, point.y()));
+		normalArray->push_back(osg::Vec3(0.0, 1.0, 0.0));
+	}
+	
+	// pass the created vertex array to the points geometry object.
+	roofGeometry->setVertexArray(vertices);
+	roofGeometry->addPrimitiveSet(new osg::DrawArrays(osg::PrimitiveSet::POLYGON, 0, numberOfPoints));
+	roofGeometry->setNormalArray(normalArray);
+	roofGeometry->setNormalBinding(osg::Geometry::BIND_PER_VERTEX); 
+
+	osg::ref_ptr<osg::Vec4Array> colorArray = new osg::Vec4Array;
+	colorArray->push_back(roofColor);
+	roofGeometry->setColorArray(colorArray);
+	roofGeometry->setColorBinding(osg::Geometry::BIND_OVERALL);
+
+	// Tesselate roof polygon
+	osg::ref_ptr<osgUtil::Tessellator> tessellator = new osgUtil::Tessellator();
+	tessellator->setTessellationType(osgUtil::Tessellator::TESS_TYPE_GEOMETRY);
+	tessellator->setBoundaryOnly(false);
+	tessellator->setWindingType( osgUtil::Tessellator::TESS_WINDING_ODD);
+	tessellator->retessellatePolygons( *roofGeometry );
+
+	roofGeode->addDrawable(roofGeometry);
+	return roofGeode;
 }
 
 osg::ref_ptr<osg::Geometry> Building::buildWall(osg::ref_ptr<Polygon> polygon, osg::Vec2 baseCoordinate, double height, osg::Vec4 color) {
