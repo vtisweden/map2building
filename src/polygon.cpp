@@ -172,7 +172,7 @@ osg::ref_ptr<osg::Group> PolygonTree::createBuildingTree(osg::Vec2 parentTileOri
 	osg::Vec2 localMin = globalMin - parentTileOrigo;
 	
 	osg::Matrix matrix;
-	matrix.setTrans(osg::Vec3(localMin.x(), 0.0, localMin.y()));
+	matrix.setTrans(osg::Vec3(localMin.x(), localMin.y(), 0.0));
 	matrixTransform->setMatrix(matrix);
 	
 	// Should maybe use an own callback for bound calculations

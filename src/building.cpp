@@ -92,14 +92,14 @@ osg::ref_ptr<osg::Geode> Building::buildRoof(osg::ref_ptr<Polygon> polygon, osg:
 	size_t numberOfPoints = polygon->points()->size();
 	for (size_t p = 0; p < (numberOfPoints - 1); ++p) {
 		osg::Vec2 point = polygon->points()->at(p) - baseCoordinate;
-		vertices->push_back(osg::Vec3(point.x(), height, point.y()));
-		normalArray->push_back(osg::Vec3(0.0, 1.0, 0.0));
+		vertices->push_back(osg::Vec3(point.x(), point.y(), height));
+		normalArray->push_back(osg::Vec3(0.0, 0.0, 1.0));
 	}
 	
 	// Add first point to close loop
 	osg::Vec2 point = polygon->points()->at(0) - baseCoordinate;
-	vertices->push_back(osg::Vec3(point.x(), height, point.y()));
-	normalArray->push_back(osg::Vec3(0.0, 1.0, 0.0));
+	vertices->push_back(osg::Vec3(point.x(), point.y(), height));
+	normalArray->push_back(osg::Vec3(0.0, 0.0, 1.0));
 
 	// pass the created vertex array to the points geometry object.
 	roofGeometry->setVertexArray(vertices);
@@ -117,7 +117,7 @@ osg::ref_ptr<osg::Geode> Building::buildRoof(osg::ref_ptr<Polygon> polygon, osg:
 	tessellator->setTessellationType(osgUtil::Tessellator::TESS_TYPE_GEOMETRY);
 	tessellator->setBoundaryOnly(false);
 	tessellator->setWindingType( osgUtil::Tessellator::TESS_WINDING_ODD);
-	tessellator->setTessellationNormal(osg::Vec3(0.0, 1.0, 0.0));
+	tessellator->setTessellationNormal(osg::Vec3(0.0, 0.0, 1.0));
 	tessellator->retessellatePolygons( *roofGeometry );
 
 	roofGeode->addDrawable(roofGeometry);
@@ -164,10 +164,10 @@ osg::ref_ptr<osg::Geometry> Building::buildWall(osg::ref_ptr<Polygon> polygon, o
 }
 
 void Building::createVertexAndNormal(osg::Vec2 point1, osg::Vec2 point2, double h1, double h2, osg::ref_ptr<osg::Vec3Array> vertexArray, osg::ref_ptr<osg::Vec3Array> normalArray) {
-	osg::Vec3 vertex1 = osg::Vec3(point1.x(), h1, point1.y());
-	osg::Vec3 vertex2 = osg::Vec3(point1.x(), h2, point1.y());
-	osg::Vec3 vertex3 = osg::Vec3(point2.x(), h1, point2.y());
-	osg::Vec3 vertex4 = osg::Vec3(point2.x(), h2, point2.y());	
+	osg::Vec3 vertex1 = osg::Vec3(point1.x(), point1.y(), h1);
+	osg::Vec3 vertex2 = osg::Vec3(point1.x(), point1.y(), h2);
+	osg::Vec3 vertex3 = osg::Vec3(point2.x(), point2.y(), h1);
+	osg::Vec3 vertex4 = osg::Vec3(point2.x(), point2.y(), h2);	
 	// Vertexs
 	vertexArray->push_back(vertex1);
 	vertexArray->push_back(vertex2);
