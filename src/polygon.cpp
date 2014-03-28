@@ -11,6 +11,8 @@
 #include <osg/MatrixTransform>
 #include <osg/ProxyNode>
 #include <osgDB/WriteFile>
+#include <osgDB/FileUtils>
+#include <osgDB/FileNameUtils>
 
 #include "buildinglibrary.h"
 
@@ -119,13 +121,13 @@ void PolygonTree::balance() {
 				if (polygon->center().y() > m_minY + h2) {
 					// North East
 					if (!m_northEast) {
-						m_northEast = new PolygonTree(m_bucketSize);
+						m_northEast = new PolygonTree(m_path, m_name, m_bucketSize);
 					}
 					m_northEast->addPolygon(polygon);
 				}else {
 					// South East
 					if (!m_southEast) {
-						m_southEast = new PolygonTree(m_bucketSize);
+						m_southEast = new PolygonTree(m_path, m_name, m_bucketSize);
 					}
 					m_southEast->addPolygon(polygon);
 				}
@@ -133,13 +135,13 @@ void PolygonTree::balance() {
 				if (polygon->center().y() > m_minY + h2) {
 					// North West
 					if (!m_northWest) {
-						m_northWest = new PolygonTree(m_bucketSize);
+						m_northWest = new PolygonTree(m_path, m_name, m_bucketSize);
 					}
 					m_northWest->addPolygon(polygon);
 				}else {
 					// South West
 					if (!m_southWest) {
-						m_southWest = new PolygonTree(m_bucketSize);
+						m_southWest = new PolygonTree(m_path, m_name, m_bucketSize);
 					}
 					m_southWest->addPolygon(polygon);
 				}
@@ -201,23 +203,55 @@ osg::ref_ptr<osg::Group> PolygonTree::createBuildingTree(osg::Vec2 parentTileOri
 			buildingGroup->addChild(BuildingLibrary::instance().buildingFromPolygon(polygon, osg::Vec2(globalMin)));
 		}
 
-		// Create filename and save tile as file
+		if (m_path.empty()) {
+			m_path = osgDB::getCurrentWorkingDirectory();
+		}
+		
+		if (m_name.empty()) {
+			m_name = "buildings";
+		}
+
+		std::stringstream relativePath;
+		relativePath << m_name;
+		relativePath << "_root";
+
+
+		std::stringstream extendedPath;
+		extendedPath << m_path;
+		extendedPath << osgDB::getNativePathSeparator();
+		extendedPath << relativePath.str();
+
+		if (!osgDB::makeDirectory(extendedPath.str())) {
+			osg::notify(osg::WARN) << "Warning: Unable to create directory: " << extendedPath.str() << std::endl;
+		}
+
+		// Generate filename
 		std::stringstream filename;
-		filename << "d:/temp/tile";
+		filename << m_name;
 		filename << "_" << (int)osg::round(m_minX);
 		filename << "_" << (int)osg::round(m_minY);
 		filename << "_" << (int)osg::round(m_maxX);
 		filename << "_" << (int)osg::round(m_maxY);
-		filename << ".osgb";
-	
+		filename << ".osgb";	
+
+		std::stringstream fullPath;
+		fullPath << extendedPath.str();
+		fullPath << osgDB::getNativePathSeparator();
+		fullPath << filename.str();
+
 		if (buildingGroup.valid()) {
-			osgDB::writeNodeFile(*buildingGroup, filename.str());
+			osgDB::writeNodeFile(*buildingGroup, fullPath.str());
 		}
+
+		std::stringstream localPath;
+		localPath << relativePath.str();
+		localPath << osgDB::getNativePathSeparator();
+		localPath << filename.str();
 
 		// Create proxy node
 		osg::ref_ptr<osg::ProxyNode> proxyNode = new osg::ProxyNode;
 		proxyNode->setLoadingExternalReferenceMode (osg::ProxyNode::DEFER_LOADING_TO_DATABASE_PAGER); 	
-		proxyNode->setFileName(0, filename.str());
+		proxyNode->setFileName(0, localPath.str());
 		proxyNode->setRadius(buildingGroup->getBound().radius());
 		proxyNode->setCenter(buildingGroup->getBound().center());
 		matrixTransform->addChild(proxyNode);

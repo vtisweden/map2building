@@ -14,8 +14,10 @@
 
 class WorldBuilder : public osg::Referenced {
 public:
-	WorldBuilder(std::string configFilename, std::string outputFilename=std::string("")) : m_configFilename(configFilename),
-	m_outputFilename(outputFilename) {};
+	WorldBuilder() : m_configFilename(""),
+		m_outputFilename(""){};
+	void setConfigFilename(std::string configFilename) { m_configFilename = configFilename; }
+	void setOutputFilename(std::string outputFilename) { m_outputFilename = outputFilename; }
 	void loadConfiguration();
 	void buildWorld();
 protected:

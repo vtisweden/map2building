@@ -114,9 +114,30 @@ void WorldBuilder::buildWorld() {
 		heightTile->updatePolygonHeight();
 	}
 
+	// Use OSG binary format as default
+	std::string fileExtension("osgb");
+	std::string path = osgDB::getCurrentWorkingDirectory();
+	std::string filename("buildings");
+	if (!m_outputFilename.empty()) {
+		if (osgDB::getLowerCaseFileExtension(m_outputFilename) != "osgb") {
+			osg::notify(osg::WARN) << "Warning: Unknown file extension specified. Reverting to .osgb file format." << std::endl;
+		}
+		filename = osgDB::getStrippedName(m_outputFilename);
+		path = osgDB::getFilePath(m_outputFilename);
+	}
+
+	// Build complete filename
+	std::stringstream completeFilename;
+	completeFilename << path;
+	completeFilename << osgDB::getNativePathSeparator();
+	completeFilename << filename;
+	completeFilename << ".";
+	completeFilename << fileExtension;
+
 	// Build balanced tree for polygons
+	osg::ref_ptr<PolygonTree> polygonTree = new PolygonTree(path, filename);
+	
 	osg::notify(osg::ALWAYS) << "Build polygon tree..." << std::endl;
-	osg::ref_ptr<PolygonTree> polygonTree = new PolygonTree;
 	for (heightIt = m_heightTiles.begin(); heightIt != m_heightTiles.end(); ++heightIt) {
 		osg::notify(osg::DEBUG_INFO) << "Getting polygons from height tile: " << ++tilenumber << " of " << m_heightTiles.size() << std::endl;
 		osg::ref_ptr<HeightTile> heightTile = (*heightIt);
@@ -148,8 +169,8 @@ void WorldBuilder::buildWorld() {
 	osg::ref_ptr<osg::Group> worldGroup = polygonTree->createBuildingTree();
 	
 	osg::notify(osg::ALWAYS) << "Write models as output..." << std::endl;
-	osgDB::writeNodeFile(*worldGroup, "d:/temp/building.osgb");
 
+	osgDB::writeNodeFile(*worldGroup, completeFilename.str());
 }
 
 void WorldBuilder::addPolygonsToHeight(PolygonVector polygons) {
