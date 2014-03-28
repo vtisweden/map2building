@@ -9,7 +9,7 @@
 #include <sstream>
 
 #include <osg/MatrixTransform>
-#include <osg/ProxyNode>
+#include <osg/PagedLOD>
 #include <osgDB/WriteFile>
 #include <osgDB/FileUtils>
 #include <osgDB/FileNameUtils>
@@ -269,13 +269,10 @@ osg::ref_ptr<osg::Group> PolygonTree::createBuildingTree(osg::Vec2 parentTileOri
 
 			if (buildingGroup.valid()) {
 				osgDB::writeNodeFile(*buildingGroup, fullPath.str());
-				// Create proxy node
-				osg::ref_ptr<osg::ProxyNode> proxyNode = new osg::ProxyNode;
-				proxyNode->setLoadingExternalReferenceMode (osg::ProxyNode::DEFER_LOADING_TO_DATABASE_PAGER);
-				proxyNode->setFileName(0, localPath.str());
-				proxyNode->setRadius(buildingGroup->getBound().radius());
-				proxyNode->setCenter(buildingGroup->getBound().center());
-				matrixTransform->addChild(proxyNode);
+				// Create page lod node
+				osg::ref_ptr<osg::PagedLOD> pageLod = new osg::PagedLOD;
+				pageLod->addChild(buildingGroup, 0, 2000.0, localPath.str());
+				matrixTransform->addChild(pageLod);
 			}
 		}
 	}
