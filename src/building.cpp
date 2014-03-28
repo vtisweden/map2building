@@ -11,6 +11,8 @@
 #include <osgUtil/Tessellator>
 #include <osgUtil/SmoothingVisitor>
 
+#include "materiallibrary.h"
+
 void Building::load(pugi::xml_node buildingNode)
 {
 	std::string type = buildingNode.attribute("type").as_string("");
@@ -30,11 +32,11 @@ void Building::load(pugi::xml_node buildingNode)
 	if (pugi::xml_node materialsNode = buildingNode.child("materials")) {
 		// Load material sets
 		for (pugi::xml_node materialNode = materialsNode.child("material"); materialNode; materialNode = materialNode.next_sibling("material")) {
-			MaterialSet materialSet;
-			materialSet.wallMaterialId = materialNode.attribute("wall").as_uint();
-			materialSet.windowMaterialId = materialNode.attribute("window").as_uint();
-			materialSet.roofMaterialId = materialNode.attribute("roof").as_uint();
-			materialSet.baseMaterialId = materialNode.attribute("basement").as_uint();
+			osg::ref_ptr<MaterialSet> materialSet = new MaterialSet;
+			materialSet->setWallMaterialId(materialNode.attribute("wall").as_uint(0));
+			materialSet->setWindowMaterialId(materialNode.attribute("window").as_uint(0));
+			materialSet->setRoofMaterialId(materialNode.attribute("roof").as_uint(0));
+			materialSet->setBaseMaterialId(materialNode.attribute("basement").as_uint(0));
 			m_materials.push_back(materialSet);
 		}
 	}
@@ -49,39 +51,46 @@ void Building::load(pugi::xml_node buildingNode)
 
 osg::ref_ptr<osg::Group> Building::createFromPolygon(osg::ref_ptr<Polygon> polygon, osg::Vec2 baseCoordinate)
 {
+	osg::ref_ptr<MaterialSet> materialSet = getRandomMaterialSet(polygon->center());
 	osg::ref_ptr<osg::Group> building = new osg::Group;
 	// Build basement
-	building->addChild(buildBasement(polygon, baseCoordinate));
+	building->addChild(buildBasement(polygon, baseCoordinate, materialSet));
 	// Build walls
-	building->addChild(buildWalls(polygon, baseCoordinate));
+	building->addChild(buildWalls(polygon, baseCoordinate, materialSet));
 	// Build windows
 	// Build roof
-	building->addChild(buildRoof(polygon, baseCoordinate));
+	building->addChild(buildRoof(polygon, baseCoordinate, materialSet));
 	return building;
 }
 
-osg::ref_ptr<osg::Geode> Building::buildBasement(osg::ref_ptr<Polygon> polygon, osg::Vec2 baseCoordinate)
+osg::ref_ptr<osg::Geode> Building::buildBasement(osg::ref_ptr<Polygon> polygon, osg::Vec2 baseCoordinate, osg::ref_ptr<MaterialSet> materialSet)
 {
 	osg::ref_ptr<osg::Geode> basementGeode = new osg::Geode;
 	osg::Vec4 basementColor = osg::Vec4(1.0, 1.0, 1.0, 1.0);
 	osg::ref_ptr<osg::Geometry> basementGeometry = buildWall(polygon, baseCoordinate, -m_basementHeight, basementColor);
+	// Apply material
+	osg::ref_ptr<osg::StateSet> stateSet = MaterialLibrary::instance().materialFromId(materialSet->baseMaterialId());
+	basementGeometry->setStateSet(stateSet);
 	basementGeode->addDrawable(basementGeometry);
 	return basementGeode;
 }
 
-osg::ref_ptr<osg::Geode> Building::buildWalls(osg::ref_ptr<Polygon> polygon, osg::Vec2 baseCoordinate)
+osg::ref_ptr<osg::Geode> Building::buildWalls(osg::ref_ptr<Polygon> polygon, osg::Vec2 baseCoordinate, osg::ref_ptr<MaterialSet> materialSet)
 {
 	osg::ref_ptr<osg::Geode> wallGeode = new osg::Geode;
-	osg::Vec4 wallColor = osg::Vec4(1.0, 0.2, 0.2, 1.0);
+	osg::Vec4 wallColor = osg::Vec4(1.0, 1.0, 1.0, 1.0);
 	osg::ref_ptr<osg::Geometry> wallGeometry = buildWall(polygon, baseCoordinate, m_roofHeight, wallColor);
+	// Apply material
+	osg::ref_ptr<osg::StateSet> stateSet = MaterialLibrary::instance().materialFromId(materialSet->wallMaterialId());
+	wallGeometry->setStateSet(stateSet);
 	wallGeode->addDrawable(wallGeometry);
 	return wallGeode;
 }
 
-osg::ref_ptr<osg::Geode> Building::buildRoof(osg::ref_ptr<Polygon> polygon, osg::Vec2 baseCoordinate)
+osg::ref_ptr<osg::Geode> Building::buildRoof(osg::ref_ptr<Polygon> polygon, osg::Vec2 baseCoordinate, osg::ref_ptr<MaterialSet> materialSet)
 {
 	osg::ref_ptr<osg::Geode> roofGeode = new osg::Geode;
-	osg::Vec4 roofColor = osg::Vec4(0.5, 0.5, 0.5, 1.0);
+	osg::Vec4 roofColor = osg::Vec4(1.0, 1.0, 1.0, 1.0);
 	osg::ref_ptr<osg::Geometry> roofGeometry = new osg::Geometry();
 	// Calculate height of building
 	double height = polygon->height() + m_roofHeight;
@@ -116,6 +125,8 @@ osg::ref_ptr<osg::Geode> Building::buildRoof(osg::ref_ptr<Polygon> polygon, osg:
 	tessellator->setWindingType( osgUtil::Tessellator::TESS_WINDING_ODD);
 	tessellator->setTessellationNormal(osg::Vec3(0.0, 0.0, 1.0));
 	tessellator->retessellatePolygons( *roofGeometry );
+	osg::ref_ptr<osg::StateSet> stateSet = MaterialLibrary::instance().materialFromId(materialSet->roofMaterialId());
+	roofGeometry->setStateSet(stateSet);
 	roofGeode->addDrawable(roofGeometry);
 	return roofGeode;
 }
@@ -166,7 +177,7 @@ void Building::createVertexAndNormal(osg::Vec2 point1, osg::Vec2 point2, double 
 	vertexArray->push_back(vertex4);
 	vertexArray->push_back(vertex3);
 	// Normals
-	osg::Vec3 normal = (vertex3 - vertex1)^(vertex2 - vertex1);
+	osg::Vec3 normal = (vertex2 - vertex1)^(vertex3 - vertex1);
 	normal.normalize();
 	normalArray->push_back(normal);
 	normalArray->push_back(normal);
@@ -175,3 +186,13 @@ void Building::createVertexAndNormal(osg::Vec2 point1, osg::Vec2 point2, double 
 }
 
 
+osg::ref_ptr<MaterialSet> Building::getRandomMaterialSet(osg::Vec2 point)
+{
+	if (m_materials.empty()) {
+		return 0;
+	}
+
+	unsigned int materialId = ((int) point.x() + (int) point.y())%m_materials.size();
+	//osg::notify(osg::ALWAYS) << "MaterialID: " << materialId << std::endl;
+	return m_materials.at(materialId);
+}
