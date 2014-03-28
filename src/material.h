@@ -32,12 +32,12 @@ class Material : public osg::Referenced {
 		osg::Vec4 m_specular;
 		osg::Vec4 m_emissive;
 		double m_shininess;
-		int m_textureId;
+		unsigned int m_textureId;
 
 		osg::ref_ptr<osg::StateSet> m_stateSet;
 };
 
-typedef std::map<int, osg::ref_ptr<Material> > MaterialMap;
+typedef std::map<unsigned int, osg::ref_ptr<Material> > MaterialMap;
 typedef MaterialMap::iterator MaterialMapIterator;
 
 #endif
