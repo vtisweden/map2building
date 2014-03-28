@@ -223,38 +223,38 @@ osg::ref_ptr<osg::Group> PolygonTree::createBuildingTree(osg::Vec2 parentTileOri
 
 		if (!osgDB::makeDirectory(extendedPath.str())) {
 			osg::notify(osg::WARN) << "Warning: Unable to create directory: " << extendedPath.str() << std::endl;
+		} else {
+			// Generate filename
+			std::stringstream filename;
+			filename << m_name;
+			filename << "_" << (int)osg::round(m_minX);
+			filename << "_" << (int)osg::round(m_minY);
+			filename << "_" << (int)osg::round(m_maxX);
+			filename << "_" << (int)osg::round(m_maxY);
+			filename << ".osgb";	
+
+			std::stringstream fullPath;
+			fullPath << extendedPath.str();
+			fullPath << osgDB::getNativePathSeparator();
+			fullPath << filename.str();
+
+			std::stringstream localPath;
+			localPath << relativePath.str();
+			localPath << osgDB::getNativePathSeparator();
+			localPath << filename.str();
+
+			if (buildingGroup.valid()) {
+				osgDB::writeNodeFile(*buildingGroup, fullPath.str());
+
+				// Create proxy node
+				osg::ref_ptr<osg::ProxyNode> proxyNode = new osg::ProxyNode;
+				proxyNode->setLoadingExternalReferenceMode (osg::ProxyNode::DEFER_LOADING_TO_DATABASE_PAGER); 	
+				proxyNode->setFileName(0, localPath.str());
+				proxyNode->setRadius(buildingGroup->getBound().radius());
+				proxyNode->setCenter(buildingGroup->getBound().center());
+				matrixTransform->addChild(proxyNode);
+			}
 		}
-
-		// Generate filename
-		std::stringstream filename;
-		filename << m_name;
-		filename << "_" << (int)osg::round(m_minX);
-		filename << "_" << (int)osg::round(m_minY);
-		filename << "_" << (int)osg::round(m_maxX);
-		filename << "_" << (int)osg::round(m_maxY);
-		filename << ".osgb";	
-
-		std::stringstream fullPath;
-		fullPath << extendedPath.str();
-		fullPath << osgDB::getNativePathSeparator();
-		fullPath << filename.str();
-
-		if (buildingGroup.valid()) {
-			osgDB::writeNodeFile(*buildingGroup, fullPath.str());
-		}
-
-		std::stringstream localPath;
-		localPath << relativePath.str();
-		localPath << osgDB::getNativePathSeparator();
-		localPath << filename.str();
-
-		// Create proxy node
-		osg::ref_ptr<osg::ProxyNode> proxyNode = new osg::ProxyNode;
-		proxyNode->setLoadingExternalReferenceMode (osg::ProxyNode::DEFER_LOADING_TO_DATABASE_PAGER); 	
-		proxyNode->setFileName(0, localPath.str());
-		proxyNode->setRadius(buildingGroup->getBound().radius());
-		proxyNode->setCenter(buildingGroup->getBound().center());
-		matrixTransform->addChild(proxyNode);
 	}
 
 	return matrixTransform;
