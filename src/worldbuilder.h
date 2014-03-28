@@ -13,27 +13,27 @@
 #include "shapetile.h"
 
 class WorldBuilder : public osg::Referenced {
-public:
-	WorldBuilder() : m_configFilename(""),
-		m_outputFilename(""){};
-	void setConfigFilename(std::string configFilename) { m_configFilename = configFilename; }
-	void setOutputFilename(std::string outputFilename) { m_outputFilename = outputFilename; }
-	void loadConfiguration();
-	void buildWorld();
-protected:
-	~WorldBuilder() {}
+	public:
+		WorldBuilder() : m_configFilename(""),
+			m_outputFilename("") {};
+		void setConfigFilename(std::string configFilename) { m_configFilename = configFilename; }
+		void setOutputFilename(std::string outputFilename) { m_outputFilename = outputFilename; }
+		void loadConfiguration();
+		void buildWorld();
+	protected:
+		~WorldBuilder() {}
 
-	void addPolygonsToHeight(PolygonVector polygons);
-	
-	std::string m_configFilename;
-	std::string m_outputFilename;
+		void addPolygonsToHeight(PolygonVector polygons);
 
-	std::vector<std::string> m_shapeFilenames;
-	std::vector<std::string> m_heigthFilenames;
+		std::string m_configFilename;
+		std::string m_outputFilename;
 
-	HeightTileVector m_heightTiles;
-	ShapeWorldVector m_shapeTiles;
-	PolygonVector m_polygonsOutsideTiles;
+		std::vector<std::string> m_shapeFilenames;
+		std::vector<std::string> m_heigthFilenames;
+
+		HeightTileVector m_heightTiles;
+		ShapeWorldVector m_shapeTiles;
+		PolygonVector m_polygonsOutsideTiles;
 };
 
 #endif

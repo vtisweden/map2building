@@ -14,7 +14,8 @@
 #include <osgDB/FileNameUtils>
 
 
-osg::ref_ptr<osg::Texture> TextureLibrary::getTextureWithId(unsigned int id) const {
+osg::ref_ptr<osg::Texture> TextureLibrary::getTextureWithId(unsigned int id) const
+{
 	std::map<unsigned int, osg::ref_ptr<osg::Texture> >::const_iterator it = m_textureMap.find(id);
 	osg::ref_ptr<osg::Texture> texture = 0;
 
@@ -27,12 +28,12 @@ osg::ref_ptr<osg::Texture> TextureLibrary::getTextureWithId(unsigned int id) con
 	return texture;
 }
 
-void TextureLibrary::load(pugi::xml_node texturesNode) {
+void TextureLibrary::load(pugi::xml_node texturesNode)
+{
 	// Load material sets
-	for (pugi::xml_node textureNode = texturesNode.child("texture"); textureNode; textureNode = textureNode.next_sibling("texture")){
+	for (pugi::xml_node textureNode = texturesNode.child("texture"); textureNode; textureNode = textureNode.next_sibling("texture")) {
 		unsigned int id = textureNode.attribute("id").as_uint(0);
 		std::string filename = osgDB::findDataFile(textureNode.attribute("filename").as_string(""));
-
 		osg::ref_ptr<osg::Image> textureImage = osgDB::readImageFile(filename);
 
 		if (textureImage) {
@@ -54,11 +55,13 @@ void TextureLibrary::load(pugi::xml_node texturesNode) {
 }
 
 
-bool TextureLibrary::addTextureWithId(unsigned int id, osg::ref_ptr<osg::Texture> texture) {
+bool TextureLibrary::addTextureWithId(unsigned int id, osg::ref_ptr<osg::Texture> texture)
+{
 	if (m_textureMap.find(id) == m_textureMap.end()) {
 		m_textureMap.insert(std::make_pair(id, texture));
 		return true;
 	}
+
 	osg::notify(osg::WARN) << "Warning: Cannot add texture. ID already in use: " << id << std::endl;
 	return false;
 }

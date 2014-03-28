@@ -10,10 +10,10 @@
 
 #include <osg/Notify>
 
-bool ShapeTile::load(const std::string& filename) {
+bool ShapeTile::load(const std::string& filename)
+{
 	// Register all format drivers needed
 	OGRRegisterAll();
-
 	OGRDataSource* ogrData = OGRSFDriverRegistrar::Open( filename.c_str(), FALSE );
 
 	if (ogrData == NULL) {
@@ -23,25 +23,21 @@ bool ShapeTile::load(const std::string& filename) {
 
 	// Get Layer 0
 	OGRLayer* ogrLayer = ogrData->GetLayer(0);
-	
 	// Reset before calculate bounds
-	ogrLayer->ResetReading();	
-
+	ogrLayer->ResetReading();
 	int	numberOfBuildings = ogrLayer->GetFeatureCount();
 	osg::notify(osg::DEBUG_INFO) << "Number of buildings in shape file: " << numberOfBuildings << std::endl;
-	
 	// Load polygons
 	loadPolygons(ogrLayer);
-
 	//Find boundaries of layer features
 	findWorldBounds();
-
 	return true;
 }
 
 void ShapeTile::findWorldBounds()
 {
 	PolygonVectorIterator it;
+
 	for (it = m_polygons.begin(); it != m_polygons.end(); ++it) {
 		osg::ref_ptr<Polygon> polygon = (*it);
 		double centerX = polygon->center().x();
@@ -66,40 +62,36 @@ void ShapeTile::findWorldBounds()
 	osg::notify(osg::DEBUG_INFO) << "             Y: " << m_minY <<"\t" << m_maxY << std::endl;
 }
 
-void ShapeTile::loadPolygons(OGRLayer* layer) {
+void ShapeTile::loadPolygons(OGRLayer* layer)
+{
 	//Reset before classifying
 	layer->ResetReading();
-
 	int numberOfBuildings = layer->GetFeatureCount();
+
 	for (int h = 0; h < numberOfBuildings; ++h) {
 		OGRFeature* ogrFeature;
 		ogrFeature = layer->GetFeature( h );
-
-		OGRGeometry* ogrGeometry;			
+		OGRGeometry* ogrGeometry;
 		ogrGeometry = ogrFeature->GetGeometryRef();
-
-		OGRPolygon* ogrPolygon = (OGRPolygon *) ogrGeometry;					
+		OGRPolygon* ogrPolygon = (OGRPolygon*) ogrGeometry;
 		OGRLinearRing* ogrLinearRing = ogrPolygon->getExteriorRing();
-
 		osg::ref_ptr<Polygon> polygon = buildPolygon(ogrLinearRing);
-		
 		m_polygons.push_back(polygon);
 	}
 }
 
-osg::ref_ptr<Polygon> ShapeTile::buildPolygon(OGRLinearRing* linearRing) {
+osg::ref_ptr<Polygon> ShapeTile::buildPolygon(OGRLinearRing* linearRing)
+{
 	osg::ref_ptr<Polygon> polygon = new Polygon;
 	//Add buildings to node
 	OGRPoint* point = static_cast<OGRPoint*>(OGRGeometryFactory::createGeometry( wkbPoint ));
 
-	for(int i=0; i<linearRing->getNumPoints(); ++i)
-	{
-		linearRing->getPoint(i, point);	
-		polygon->push_back(osg::Vec2( point->getX(), point->getY())); 
+	for (int i=0; i<linearRing->getNumPoints(); ++i) {
+		linearRing->getPoint(i, point);
+		polygon->push_back(osg::Vec2( point->getX(), point->getY()));
 	}
 
 	OGRGeometryFactory::destroyGeometry(point);
-
 	return polygon;
 }
 
