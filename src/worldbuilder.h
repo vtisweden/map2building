@@ -10,7 +10,7 @@
 #include "buildinglibrary.h"
 #include "texturelibrary.h"
 #include "heighttile.h"
-#include "shapeworld.h"
+#include "shapetile.h"
 
 class WorldBuilder : public osg::Referenced {
 public:

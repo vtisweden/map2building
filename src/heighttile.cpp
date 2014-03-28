@@ -6,14 +6,19 @@
  */
 #include "heighttile.h"
 
-HeightTile::HeightTile(std::string filename) : m_filename(filename),
+HeightTile::HeightTile() : m_filename(""),
 	m_rasterSizeX(0),
 	m_rasterSizeY(0),
 	m_minX(0.0),
 	m_maxX(0.0),
 	m_minY(0.0),
 	m_maxY(0.0),
-	m_validExtents(false) { getExtents(); }
+	m_validExtents(false) {}
+
+void HeightTile::load(std::string filename) {
+	m_filename = filename;
+	getExtents();
+}
 
 bool HeightTile::addPolygon(osg::ref_ptr<Polygon> polygon) {
 	if (!m_validExtents) {

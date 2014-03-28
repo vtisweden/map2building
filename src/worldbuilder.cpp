@@ -71,7 +71,8 @@ void WorldBuilder::buildWorld() {
 		osg::notify(osg::DEBUG_INFO) << "Reading height file: " << ++filenumber << " of " << m_heigthFilenames.size() << std::endl;
 		std::string heightFilename = osgDB::findDataFile(*it);
 		if (!heightFilename.empty()) {
-			osg::ref_ptr<HeightTile> heightTile = new HeightTile(heightFilename);
+			osg::ref_ptr<HeightTile> heightTile = new HeightTile();
+			heightTile->load(heightFilename);
 			m_heightTiles.push_back(heightTile);
 		} else {
 			osg::notify(osg::WARN) << "Warning: Could not find height data file: " << (*it) << std::endl;
@@ -85,8 +86,8 @@ void WorldBuilder::buildWorld() {
 		osg::notify(osg::DEBUG_INFO) << "Reading shape file: " << ++filenumber << " of " << m_shapeFilenames.size() << std::endl;
 		std::string shapeFilename = osgDB::findDataFile(*it);
 		if (!shapeFilename.empty()) {
-			osg::ref_ptr<ShapeWorld> shapeWorld = new ShapeWorld();
-			shapeWorld->loadShapeFile(shapeFilename);
+			osg::ref_ptr<ShapeTile> shapeWorld = new ShapeTile();
+			shapeWorld->load(shapeFilename);
 			m_shapeTiles.push_back(shapeWorld);
 		} else {
 			osg::notify(osg::WARN) << "Warning: Could not find shape file: " << (*it) << std::endl;
@@ -99,7 +100,7 @@ void WorldBuilder::buildWorld() {
 	ShapeWorldVectorIterator shapeIt;
 	for (shapeIt = m_shapeTiles.begin(); shapeIt != m_shapeTiles.end(); ++shapeIt) {
 		osg::notify(osg::DEBUG_INFO) << "Processed shape tile: " << ++tilenumber << " of " << m_shapeTiles.size() << std::endl;
-		osg::ref_ptr<ShapeWorld> shapeWorld = (*shapeIt);
+		osg::ref_ptr<ShapeTile> shapeWorld = (*shapeIt);
 		addPolygonsToHeight(shapeWorld->polygons());	
 	}
 

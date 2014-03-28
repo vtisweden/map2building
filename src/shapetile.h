@@ -1,5 +1,5 @@
 /*
- * shapeworld.h
+ * shapetile.h
  *
  *  Created on: March 22, 2014
  *      Author: Bjorn Blissing
@@ -13,13 +13,13 @@
 
 #include "polygon.h"
 
-class ShapeWorld : public osg::Referenced {
+class ShapeTile : public osg::Referenced {
 public:
-	ShapeWorld() : m_minX(std::numeric_limits<double>::max()), m_maxX(std::numeric_limits<double>::min()), m_minY(std::numeric_limits<double>::max()), m_maxY(std::numeric_limits<double>::min()) {};
-	bool loadShapeFile(const std::string& filename);
+	ShapeTile() : m_minX(std::numeric_limits<double>::max()), m_maxX(std::numeric_limits<double>::min()), m_minY(std::numeric_limits<double>::max()), m_maxY(std::numeric_limits<double>::min()) {};
+	bool load(const std::string& filename);
 	PolygonVector polygons() const { return m_polygons; }
 protected:
-	~ShapeWorld() {};
+	~ShapeTile() {};
 	void findWorldBounds();
 	void loadPolygons(OGRLayer* layer);
 	osg::ref_ptr<Polygon> buildPolygon(OGRLinearRing* linearRing);
@@ -32,7 +32,7 @@ protected:
 	PolygonVector m_polygons;
 };
 
-typedef std::vector< osg::ref_ptr<ShapeWorld> > ShapeWorldVector;
+typedef std::vector< osg::ref_ptr<ShapeTile> > ShapeWorldVector;
 typedef ShapeWorldVector::iterator ShapeWorldVectorIterator;
 
 #endif

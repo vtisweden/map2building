@@ -1,16 +1,16 @@
 /*
- * shapeworld.cpp
+ * shapetile.cpp
  *
  *  Created on: March 22, 2014
  *      Author: Bjorn Blissing
  */
-#include "shapeworld.h"
+#include "shapetile.h"
 
 #include <sstream>
 
 #include <osg/Notify>
 
-bool ShapeWorld::loadShapeFile(const std::string& filename) {
+bool ShapeTile::load(const std::string& filename) {
 	// Register all format drivers needed
 	OGRRegisterAll();
 
@@ -39,7 +39,7 @@ bool ShapeWorld::loadShapeFile(const std::string& filename) {
 	return true;
 }
 
-void ShapeWorld::findWorldBounds()
+void ShapeTile::findWorldBounds()
 {
 	PolygonVectorIterator it;
 	for (it = m_polygons.begin(); it != m_polygons.end(); ++it) {
@@ -66,7 +66,7 @@ void ShapeWorld::findWorldBounds()
 	osg::notify(osg::DEBUG_INFO) << "             Y: " << m_minY <<"\t" << m_maxY << std::endl;
 }
 
-void ShapeWorld::loadPolygons(OGRLayer* layer) {
+void ShapeTile::loadPolygons(OGRLayer* layer) {
 	//Reset before classifying
 	layer->ResetReading();
 
@@ -87,7 +87,7 @@ void ShapeWorld::loadPolygons(OGRLayer* layer) {
 	}
 }
 
-osg::ref_ptr<Polygon> ShapeWorld::buildPolygon(OGRLinearRing* linearRing) {
+osg::ref_ptr<Polygon> ShapeTile::buildPolygon(OGRLinearRing* linearRing) {
 	osg::ref_ptr<Polygon> polygon = new Polygon;
 	//Add buildings to node
 	OGRPoint* point = static_cast<OGRPoint*>(OGRGeometryFactory::createGeometry( wkbPoint ));

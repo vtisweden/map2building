@@ -8,7 +8,7 @@ SET(TARGET_SRC
 	buildinglibrary.cpp
 	heighttile.cpp
 	polygon.cpp
-	shapeworld.cpp
+	shapetile.cpp
 	texturelibrary.cpp
 	worldbuilder.cpp
 	# XML Library
@@ -21,7 +21,7 @@ SET(TARGET_H
 	buildinglibrary.h
 	heighttile.h
 	polygon.h
-	shapeworld.h
+	shapetile.h
 	texturelibrary.h
 	worldbuilder.h
 	# XML Library
