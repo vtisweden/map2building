@@ -48,7 +48,7 @@ void Material::load(pugi::xml_node materialNode)
 	}
 
 	if (pugi::xml_node textureNode = materialNode.child("texture")) {
-		m_textureId = textureNode.attribute("value").as_int(0);
+		m_textureId = textureNode.attribute("id").as_uint(0);
 	}
 
 	osg::notify(osg::DEBUG_INFO) << "Material:  " << name << std::endl;
@@ -78,6 +78,7 @@ osg::ref_ptr<osg::StateSet> Material::getStateSet()
 		// Attach texture
 		if (m_textureId != 0) {
 			osg::ref_ptr<osg::Texture> texture = TextureLibrary::instance().getTextureWithId(m_textureId);
+
 			if (texture.valid()) {
 				m_stateSet->setTextureAttributeAndModes(0, texture, osg::StateAttribute::ON);
 			}
