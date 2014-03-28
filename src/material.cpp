@@ -78,7 +78,9 @@ osg::ref_ptr<osg::StateSet> Material::getStateSet()
 		// Attach texture
 		if (m_textureId != 0) {
 			osg::ref_ptr<osg::Texture> texture = TextureLibrary::instance().getTextureWithId(m_textureId);
-			m_stateSet->setTextureAttributeAndModes(0, texture, osg::StateAttribute::ON);
+			if (texture.valid()) {
+				m_stateSet->setTextureAttributeAndModes(0, texture, osg::StateAttribute::ON);
+			}
 		}
 	}
 
