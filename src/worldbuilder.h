@@ -8,7 +8,8 @@
 
 class WorldBuilder : public osg::Referenced {
 public:
-	WorldBuilder(std::string filename) : m_filename(filename) {};
+	WorldBuilder(std::string configFilename, std::string outputFilename=std::string("")) : m_configFilename(configFilename),
+	m_outputFilename(outputFilename) {};
 	void loadConfiguration();
 	void buildWorld();
 protected:
@@ -16,7 +17,8 @@ protected:
 
 	void addPolygonsToHeight(PolygonVector polygons);
 	
-	std::string m_filename;
+	std::string m_configFilename;
+	std::string m_outputFilename;
 
 	std::vector<std::string> m_shapeFilenames;
 	std::vector<std::string> m_heigthFilenames;

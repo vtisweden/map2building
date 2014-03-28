@@ -10,14 +10,14 @@
 void WorldBuilder::loadConfiguration() {
 	
 	// Add path of configuration file to path list
-	std::string directory = osgDB::getFilePath(m_filename);
+	std::string directory = osgDB::getFilePath(m_configFilename);
 	osgDB::FilePathList pathList = osgDB::getDataFilePathList();
 	pathList.push_back(directory);
 	osgDB::setDataFilePathList(pathList);
 
 	// Read xml information
 	pugi::xml_document doc;
-	pugi::xml_parse_result result = doc.load_file(m_filename.c_str());
+	pugi::xml_parse_result result = doc.load_file(m_configFilename.c_str());
 
 	if (pugi::xml_node configurationNode = doc.child("configuration")) {
 		// Textures
@@ -52,7 +52,7 @@ void WorldBuilder::loadConfiguration() {
 			osg::notify(osg::DEBUG_INFO) << "Number of height files: " << m_heigthFilenames.size() << std::endl;
 		}
 	} else {
-		osg::notify(osg::WARN) << "Warning: Could not read configuration file:" << m_filename << std::endl;
+		osg::notify(osg::WARN) << "Warning: Could not read configuration file:" << m_configFilename << std::endl;
 	}
 }
 
@@ -141,7 +141,7 @@ void WorldBuilder::buildWorld() {
 	osg::ref_ptr<osg::Group> worldGroup = polygonTree->createBuildingTree();
 	
 	osg::notify(osg::ALWAYS) << "Write models as output..." << std::endl;
-	osgDB::writeNodeFile(*worldGroup, "c:/temp/building.osgb");
+	osgDB::writeNodeFile(*worldGroup, "d:/temp/building.osgb");
 
 }
 

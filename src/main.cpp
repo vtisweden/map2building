@@ -13,12 +13,15 @@ int main( int argc, char** argv )
 	// use an ArgumentParser object to manage the program arguments.
 	osg::ArgumentParser arguments(&argc,argv);
 
-	
-
 	// Load configuration file
-	arguments.getApplicationUsage()->addCommandLineOption("-config","Path for configuration file");
+	arguments.getApplicationUsage()->addCommandLineOption("--config","Path for configuration file");
+	arguments.getApplicationUsage()->addCommandLineOption("--output","Path output filename");
 	std::string configFile;
-	arguments.read("-config",configFile);
+	std::string outputFile;
+	arguments.read("--config",configFile);
+	arguments.read("-c",configFile);
+	arguments.read("--output",outputFile);
+	arguments.read("-o",outputFile);
 	if (!configFile.empty()) {
 		osg::ref_ptr<WorldBuilder> worldBuilder = new WorldBuilder(configFile);
 		worldBuilder->loadConfiguration();
