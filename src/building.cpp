@@ -101,7 +101,7 @@ osg::ref_ptr<osg::Geode> Building::buildRoof(osg::ref_ptr<Polygon> polygon, osg:
 	vertices->push_back(osg::Vec3(point.x(), point.y(), height));
 	normalArray->push_back(osg::Vec3(0.0, 0.0, 1.0));
 
-	// pass the created vertex array to the points geometry object.
+	// Pass the created vertex array to the points geometry object.
 	roofGeometry->setVertexArray(vertices);
 	roofGeometry->addPrimitiveSet(new osg::DrawArrays(osg::PrimitiveSet::POLYGON, 0, numberOfPoints));
 	roofGeometry->setNormalArray(normalArray);
@@ -112,7 +112,7 @@ osg::ref_ptr<osg::Geode> Building::buildRoof(osg::ref_ptr<Polygon> polygon, osg:
 	roofGeometry->setColorArray(colorArray);
 	roofGeometry->setColorBinding(osg::Geometry::BIND_OVERALL);
 
-	// Tesselate roof polygon
+	// Tessellate roof polygon
 	osg::ref_ptr<osgUtil::Tessellator> tessellator = new osgUtil::Tessellator();
 	tessellator->setTessellationType(osgUtil::Tessellator::TESS_TYPE_GEOMETRY);
 	tessellator->setBoundaryOnly(false);
