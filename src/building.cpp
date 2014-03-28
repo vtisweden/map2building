@@ -90,6 +90,11 @@ osg::ref_ptr<osg::Geode> Building::buildRoof(osg::ref_ptr<Polygon> polygon, osg:
 		normalArray->push_back(osg::Vec3(0.0, 1.0, 0.0));
 	}
 	
+	// Add first point to close loop
+	osg::Vec2 point = polygon->points()->at(0) - baseCoordinate;
+	vertices->push_back(osg::Vec3(point.x(), height, point.y()));
+	normalArray->push_back(osg::Vec3(0.0, 1.0, 0.0));
+
 	// pass the created vertex array to the points geometry object.
 	roofGeometry->setVertexArray(vertices);
 	roofGeometry->addPrimitiveSet(new osg::DrawArrays(osg::PrimitiveSet::POLYGON, 0, numberOfPoints));
@@ -106,6 +111,7 @@ osg::ref_ptr<osg::Geode> Building::buildRoof(osg::ref_ptr<Polygon> polygon, osg:
 	tessellator->setTessellationType(osgUtil::Tessellator::TESS_TYPE_GEOMETRY);
 	tessellator->setBoundaryOnly(false);
 	tessellator->setWindingType( osgUtil::Tessellator::TESS_WINDING_ODD);
+	tessellator->setTessellationNormal(osg::Vec3(0.0, 1.0, 0.0));
 	tessellator->retessellatePolygons( *roofGeometry );
 
 	roofGeode->addDrawable(roofGeometry);
