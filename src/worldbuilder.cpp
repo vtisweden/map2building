@@ -12,6 +12,7 @@
 
 #include "pugixml.hpp"
 #include "heighttile.h"
+#include "materiallibrary.h"
 
 void WorldBuilder::loadConfiguration()
 {
@@ -29,6 +30,12 @@ void WorldBuilder::loadConfiguration()
 		if (pugi::xml_node texturesNode = configurationNode.child("textures")) {
 			TextureLibrary::instance().load(texturesNode);
 		}
+
+		// Materials
+		if (pugi::xml_node materialsNode = configurationNode.child("materials")) {
+			MaterialLibrary::instance().load(materialsNode);
+		}
+
 
 		// Buildings
 		if (pugi::xml_node buildingsNode = configurationNode.child("buildings")) {

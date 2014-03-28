@@ -7,6 +7,8 @@ SET(TARGET_SRC
 	building.cpp
 	buildinglibrary.cpp
 	heighttile.cpp
+	material.cpp
+	materiallibrary.cpp
 	polygon.cpp
 	shapetile.cpp
 	texturelibrary.cpp
@@ -20,6 +22,8 @@ SET(TARGET_H
 	building.h
 	buildinglibrary.h
 	heighttile.h
+	material.h
+	materiallibrary.h
 	polygon.h
 	shapetile.h
 	texturelibrary.h
