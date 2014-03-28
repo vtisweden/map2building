@@ -1,3 +1,9 @@
+/*
+ * building.cpp
+ *
+ *  Created on: March 22, 2014
+ *      Author: Bjorn Blissing
+ */
 #include "building.h"
 
 #include <osg/Notify>

@@ -1,3 +1,9 @@
+/*
+ * texturelibrary.h
+ *
+ *  Created on: March 22, 2014
+ *      Author: Bjorn Blissing
+ */
 #ifndef _TEXTURE_LIBRARY_H_
 #define _TEXTURE_LIBRARY_H_
 

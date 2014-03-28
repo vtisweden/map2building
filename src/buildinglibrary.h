@@ -1,3 +1,9 @@
+/*
+ * buildinglibrary.h
+ *
+ *  Created on: March 22, 2014
+ *      Author: Bjorn Blissing
+ */
 #ifndef _BUILDING_LIBRARY_H_
 #define _BUILDING_LIBRARY_H_
 

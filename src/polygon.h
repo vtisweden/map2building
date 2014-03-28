@@ -1,3 +1,9 @@
+/*
+ * polygon.h
+ *
+ *  Created on: March 25, 2014
+ *      Author: Bjorn Blissing
+ */
 #ifndef _POLYGON_H_
 #define _POLYGON_H_
 

@@ -1,3 +1,9 @@
+/*
+ * building.h
+ *
+ *  Created on: March 22, 2014
+ *      Author: Bjorn Blissing
+ */
 #ifndef _BUILDING_H_ 
 #define _BUILDING_H_
 

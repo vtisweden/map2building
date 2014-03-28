@@ -1,3 +1,9 @@
+/*
+ * heighttile.cpp
+ *
+ *  Created on: March 25, 2014
+ *      Author: Bjorn Blissing
+ */
 #include "heighttile.h"
 
 HeightTile::HeightTile(std::string filename) : m_filename(filename),

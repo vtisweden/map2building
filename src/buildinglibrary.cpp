@@ -1,3 +1,9 @@
+/*
+ * buildinglibrary.cpp
+ *
+ *  Created on: March 22, 2014
+ *      Author: Bjorn Blissing
+ */
 #include "buildinglibrary.h"
 
 #include <osg/notify>

@@ -1,3 +1,9 @@
+/*
+ * worldbuilder.cpp
+ *
+ *  Created on: March 25, 2014
+ *      Author: Bjorn Blissing
+ */
 #include "worldbuilder.h"
 
 #include <osgDB/FileUtils>

@@ -1,3 +1,9 @@
+/*
+ * polygon.cpp
+ *
+ *  Created on: March 25, 2014
+ *      Author: Bjorn Blissing
+ */
 #include "polygon.h"
 
 #include <sstream>
@@ -197,7 +203,7 @@ osg::ref_ptr<osg::Group> PolygonTree::createBuildingTree(osg::Vec2 parentTileOri
 
 		// Create filename and save tile as file
 		std::stringstream filename;
-		filename << "c:/temp/tile";
+		filename << "d:/temp/tile";
 		filename << "_" << (int)osg::round(m_minX);
 		filename << "_" << (int)osg::round(m_minY);
 		filename << "_" << (int)osg::round(m_maxX);

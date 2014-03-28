@@ -1,3 +1,9 @@
+/*
+ * worldbuilder.h
+ *
+ *  Created on: March 25, 2014
+ *      Author: Bjorn Blissing
+ */
 #ifndef _WORLDBUILDER_H_
 #define _WORLDBUILDER_H_
 

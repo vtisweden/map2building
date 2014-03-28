@@ -1,3 +1,9 @@
+/*
+ * heighttile.h
+ *
+ *  Created on: March 25, 2014
+ *      Author: Bjorn Blissing
+ */
 #ifndef _HEIGHTTILE_H_
 #define _HEIGHTTILE_H_
 

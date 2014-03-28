@@ -1,3 +1,9 @@
+/*
+ * shapeworld.cpp
+ *
+ *  Created on: March 22, 2014
+ *      Author: Bjorn Blissing
+ */
 #include "shapeworld.h"
 
 #include <sstream>

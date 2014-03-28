@@ -1,3 +1,9 @@
+/*
+ * shapeworld.h
+ *
+ *  Created on: March 22, 2014
+ *      Author: Bjorn Blissing
+ */
 #ifndef _SHAPEWORLD_H_
 #define _SHAPEWORLD_H_
 

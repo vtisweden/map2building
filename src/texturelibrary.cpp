@@ -1,3 +1,9 @@
+/*
+ * texturelibrary.cpp
+ *
+ *  Created on: March 22, 2014
+ *      Author: Bjorn Blissing
+ */
 #include "texturelibrary.h"
 
 #include <osg/Texture2D>
