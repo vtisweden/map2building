@@ -22,14 +22,14 @@ class MaterialLibrary : public osg::Referenced {
 		}
 
 		void load(pugi::xml_node materialsNode);
-		osg::ref_ptr<osg::StateSet> materialFromId(int materialId);
+		osg::ref_ptr<osg::StateSet> materialFromId(unsigned int materialId);
 	protected:
 		MaterialLibrary() {};
 		~MaterialLibrary() {};
 		MaterialLibrary(MaterialLibrary const&); // No copy constructor allowed for singleton
 		MaterialLibrary& operator=(MaterialLibrary const&); // No assignment operator allowed for singleton
 
-		bool addMaterialWithId(int id, osg::ref_ptr<Material> material);
+		bool addMaterialWithId(unsigned int id, osg::ref_ptr<Material> material);
 
 		MaterialMap m_materialMap;
 };
