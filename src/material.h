@@ -27,6 +27,8 @@ class Material : public osg::Referenced {
 		osg::Vec4 getColorFromNode(pugi::xml_node colorNode);
 		std::string colorAsString(osg::Vec4 color);
 
+		std::string m_name;
+
 		osg::Vec4 m_ambient;
 		osg::Vec4 m_diffuse;
 		osg::Vec4 m_specular;

@@ -14,7 +14,8 @@
 
 #include "texturelibrary.h"
 
-Material::Material() : m_ambient(osg::Vec4(0.2f,0.2f,0.2f,1.0f))
+Material::Material() : m_name("")
+	, m_ambient(osg::Vec4(0.2f,0.2f,0.2f,1.0f))
 	, m_diffuse(osg::Vec4(0.8f,0.8f,0.8f,1.0f))
 	, m_specular(osg::Vec4(0.0f,0.0f,0.0f,1.0f))
 	, m_emissive(osg::Vec4(0.0f,0.0f,0.0f,1.0f))
@@ -25,7 +26,7 @@ Material::Material() : m_ambient(osg::Vec4(0.2f,0.2f,0.2f,1.0f))
 
 void Material::load(pugi::xml_node materialNode)
 {
-	std::string name = materialNode.attribute("name").as_string("");
+	m_name = materialNode.attribute("name").as_string("");
 
 	if (pugi::xml_node ambientNode = materialNode.child("ambient")) {
 		m_ambient = getColorFromNode(ambientNode);
@@ -51,7 +52,7 @@ void Material::load(pugi::xml_node materialNode)
 		m_textureId = textureNode.attribute("id").as_uint(0);
 	}
 
-	osg::notify(osg::DEBUG_INFO) << "Material:  " << name << std::endl;
+	osg::notify(osg::DEBUG_INFO) << "Material:  " << m_name << std::endl;
 	osg::notify(osg::DEBUG_INFO) << "Ambient:   " << colorAsString(m_ambient) << std::endl;
 	osg::notify(osg::DEBUG_INFO) << "Diffuse:   " << colorAsString(m_diffuse) << std::endl;
 	osg::notify(osg::DEBUG_INFO) << "Specular:  " << colorAsString(m_specular) << std::endl;
@@ -67,6 +68,9 @@ osg::ref_ptr<osg::StateSet> Material::getStateSet()
 		m_stateSet = new osg::StateSet;
 		// Set basic material parameters
 		osg::ref_ptr<osg::Material> material = new osg::Material();
+		if (!m_name.empty()) {
+			material->setName(m_name);
+		}
 		material->setAmbient(osg::Material::FRONT_AND_BACK, m_ambient);
 		material->setDiffuse(osg::Material::FRONT_AND_BACK, m_diffuse);
 		material->setEmission(osg::Material::FRONT_AND_BACK, m_emissive);
