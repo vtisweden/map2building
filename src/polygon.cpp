@@ -281,6 +281,9 @@ osg::ref_ptr<osg::Group> PolygonTree::createBuildingTree(osg::Vec2 parentTileOri
 				pageLod->addChild(buildingGroup, 0, 5000.0 , localPath.str());
 				matrixTransform->addChild(pageLod);
 			}
+			
+			// Delete all children to free up some memory
+			buildingGroup->removeChildren(0, buildingGroup->getNumChildren());
 		}
 	}
 
