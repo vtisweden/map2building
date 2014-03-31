@@ -13,6 +13,7 @@
 #include <osgDB/WriteFile>
 #include <osgDB/FileUtils>
 #include <osgDB/FileNameUtils>
+#include <osgUtil/Optimizer>
 
 #include "buildinglibrary.h"
 
@@ -230,6 +231,9 @@ osg::ref_ptr<osg::Group> PolygonTree::createBuildingTree(osg::Vec2 parentTileOri
 			osg::ref_ptr<Polygon> polygon = (*polygonIt);
 			buildingGroup->addChild(BuildingLibrary::instance().buildingFromPolygon(polygon, osg::Vec2(globalMin)));
 		}
+
+		osgUtil::Optimizer optimizer;
+		optimizer.optimize(buildingGroup, osgUtil::Optimizer::DEFAULT_OPTIMIZATIONS |  osgUtil::Optimizer::MERGE_GEODES);
 
 		if (m_path.empty()) {
 			m_path = osgDB::getCurrentWorkingDirectory();
