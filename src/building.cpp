@@ -97,18 +97,24 @@ osg::ref_ptr<osg::Geode> Building::buildRoof(osg::ref_ptr<Polygon> polygon, osg:
 	// Add vertices to roof
 	osg::ref_ptr<osg::Vec3Array> vertices = new osg::Vec3Array();
 	osg::ref_ptr<osg::Vec3Array> normalArray = new osg::Vec3Array();
+	osg::ref_ptr<osg::Vec2Array> textureArray = new osg::Vec2Array();
 	size_t numberOfPoints = polygon->points()->size();
-
+	osg::Vec2 centerPoint = polygon->center();
 	for (size_t p = 0; p < (numberOfPoints - 1); ++p) {
 		osg::Vec2 point = polygon->points()->at(p) - baseCoordinate;
 		vertices->push_back(osg::Vec3(point.x(), point.y(), height));
 		normalArray->push_back(osg::Vec3(0.0, 0.0, 1.0));
+
+		osg::Vec2 texturePoint = polygon->points()->at(p) - centerPoint;
+		textureArray->push_back(texturePoint);
 	}
 
 	// Add first point to close loop
 	osg::Vec2 point = polygon->points()->at(0) - baseCoordinate;
 	vertices->push_back(osg::Vec3(point.x(), point.y(), height));
 	normalArray->push_back(osg::Vec3(0.0, 0.0, 1.0));
+	osg::Vec2 texturePoint = polygon->points()->at(0) - centerPoint;
+	textureArray->push_back(texturePoint);
 	// Pass the created vertex array to the points geometry object.
 	roofGeometry->setVertexArray(vertices);
 	roofGeometry->addPrimitiveSet(new osg::DrawArrays(osg::PrimitiveSet::POLYGON, 0, numberOfPoints));
@@ -118,6 +124,8 @@ osg::ref_ptr<osg::Geode> Building::buildRoof(osg::ref_ptr<Polygon> polygon, osg:
 	colorArray->push_back(roofColor);
 	roofGeometry->setColorArray(colorArray);
 	roofGeometry->setColorBinding(osg::Geometry::BIND_OVERALL);
+
+	roofGeometry->setTexCoordArray(0, textureArray);
 	// Tessellate roof polygon
 	osg::ref_ptr<osgUtil::Tessellator> tessellator = new osgUtil::Tessellator();
 	tessellator->setTessellationType(osgUtil::Tessellator::TESS_TYPE_GEOMETRY);
@@ -180,11 +188,11 @@ void Building::createVertexAndNormal(osg::Vec2 point1, osg::Vec2 point2,
 	osg::Vec3 vertex3 = osg::Vec3(point2.x(), point2.y(), h2);
 	osg::Vec3 vertex4 = osg::Vec3(point2.x(), point2.y(), h1);
 
-	double endV = fabs(h1 - h2);
+	double endV = fabs(h1 - h2) * 0.5;
 	osg::Vec2 textureCoord1 = osg::Vec2(startU, 0);
 	osg::Vec2 textureCoord2 = osg::Vec2(startU, endV);
 
-	startU += (point2 - point1).length();
+	startU += (point2 - point1).length() * 0.5;
 
 	osg::Vec2 textureCoord3 = osg::Vec2(startU, endV);
 	osg::Vec2 textureCoord4 = osg::Vec2(startU, 0);
