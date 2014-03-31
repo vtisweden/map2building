@@ -14,6 +14,9 @@
 
 #include "pugixml.hpp"
 
+typedef std::map<unsigned int, osg::ref_ptr<osg::Texture> > TextureMap;
+typedef TextureMap::const_iterator TextureMapIterator;
+
 class TextureLibrary : public osg::Referenced {
 	public:
 		static TextureLibrary& instance()
@@ -23,6 +26,7 @@ class TextureLibrary : public osg::Referenced {
 		}
 		osg::ref_ptr<osg::Texture> getTextureWithId(unsigned int id) const;
 		void load(pugi::xml_node texturesNode);
+		void exportTextures(std::string outputPath);
 	protected:
 		TextureLibrary() {};
 		~TextureLibrary() {};
@@ -30,7 +34,7 @@ class TextureLibrary : public osg::Referenced {
 		TextureLibrary& operator=(TextureLibrary const&); // No assignment operator allowed for singleton
 		bool addTextureWithId(unsigned int id, osg::ref_ptr<osg::Texture> texture);
 
-		std::map<unsigned int, osg::ref_ptr<osg::Texture> > m_textureMap;
+		TextureMap m_textureMap;
 };
 
 #endif

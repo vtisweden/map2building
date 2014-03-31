@@ -10,13 +10,14 @@
 #include <osg/Image>
 
 #include <osgDB/ReadFile>
+#include <osgDB/WriteFile>
 #include <osgDB/FileUtils>
 #include <osgDB/FileNameUtils>
 
 
 osg::ref_ptr<osg::Texture> TextureLibrary::getTextureWithId(unsigned int id) const
 {
-	std::map<unsigned int, osg::ref_ptr<osg::Texture> >::const_iterator it = m_textureMap.find(id);
+	TextureMapIterator it = m_textureMap.find(id);
 	osg::ref_ptr<osg::Texture> texture = 0;
 
 	if (it != m_textureMap.end()) {
@@ -52,6 +53,24 @@ void TextureLibrary::load(pugi::xml_node texturesNode)
 			osg::notify(osg::WARN) << "Warning: Unable to read texture:" << std::endl;
 			osg::notify(osg::WARN) << "\tId:       " << id << std::endl;
 			osg::notify(osg::WARN) << "\tFilename: " << filename << std::endl;
+		}
+	}
+}
+
+void TextureLibrary::exportTextures(std::string outputPath) {
+	TextureMapIterator textureIt;
+	std::stringstream completeFilename;
+	for (textureIt = m_textureMap.begin(); textureIt != m_textureMap.end(); ++textureIt) {
+		osg::ref_ptr<osg::Texture> texture = (*textureIt).second;
+		osg::ref_ptr<osg::Texture2D> texture2D = dynamic_cast<osg::Texture2D*>(texture.get());
+		if (texture2D.valid()) {
+			osg::ref_ptr<osg::Image> textureImage = texture2D->getImage();
+			completeFilename.clear();
+			completeFilename.str( std::string() );
+			completeFilename << outputPath;
+			completeFilename << osgDB::getNativePathSeparator();
+			completeFilename << textureImage->getFileName();
+			osgDB::writeImageFile(*textureImage, completeFilename.str());
 		}
 	}
 }
