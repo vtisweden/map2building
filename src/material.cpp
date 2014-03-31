@@ -11,6 +11,7 @@
 
 #include <osg/Notify>
 #include <osg/Material>
+#include <osg/CullFace>
 
 #include "texturelibrary.h"
 
@@ -76,8 +77,14 @@ osg::ref_ptr<osg::StateSet> Material::getStateSet()
 		material->setEmission(osg::Material::FRONT_AND_BACK, m_emissive);
 		material->setSpecular(osg::Material::FRONT_AND_BACK, m_specular);
 		material->setShininess(osg::Material::FRONT_AND_BACK, m_shininess);
-		material->setColorMode(osg::Material::AMBIENT_AND_DIFFUSE);
+		// Do not use color mode, use Material instead
+		material->setColorMode(osg::Material::OFF);
 		m_stateSet->setAttributeAndModes(material, osg::StateAttribute::ON);
+		
+		// Cull back face
+		osg::ref_ptr<osg::CullFace> cullface = new osg::CullFace();
+		cullface->setMode(osg::CullFace::BACK);
+		m_stateSet->setAttributeAndModes(cullface);
 
 		// Attach texture
 		if (m_textureId != 0) {

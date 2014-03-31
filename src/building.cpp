@@ -70,7 +70,7 @@ osg::ref_ptr<osg::Geode> Building::buildBasement(osg::ref_ptr<Polygon> polygon, 
 	osg::ref_ptr<osg::Geometry> basementGeometry = extrudePolygon(polygon, baseCoordinate, -m_basementHeight, basementColor);
 	// Apply material
 	osg::ref_ptr<osg::StateSet> stateSet = MaterialLibrary::instance().materialFromId(materialSet->baseMaterialId());
-	basementGeometry->setStateSet(stateSet);
+	basementGeode->setStateSet(stateSet);
 	basementGeode->addDrawable(basementGeometry);
 	return basementGeode;
 }
@@ -82,7 +82,7 @@ osg::ref_ptr<osg::Geode> Building::buildWalls(osg::ref_ptr<Polygon> polygon, osg
 	osg::ref_ptr<osg::Geometry> wallGeometry = extrudePolygon(polygon, baseCoordinate, m_roofHeight, wallColor);
 	// Apply material
 	osg::ref_ptr<osg::StateSet> stateSet = MaterialLibrary::instance().materialFromId(materialSet->wallMaterialId());
-	wallGeometry->setStateSet(stateSet);
+	wallGeode->setStateSet(stateSet);
 	wallGeode->addDrawable(wallGeometry);
 	return wallGeode;
 }
@@ -126,7 +126,7 @@ osg::ref_ptr<osg::Geode> Building::buildRoof(osg::ref_ptr<Polygon> polygon, osg:
 	tessellator->setTessellationNormal(osg::Vec3(0.0, 0.0, 1.0));
 	tessellator->retessellatePolygons( *roofGeometry );
 	osg::ref_ptr<osg::StateSet> stateSet = MaterialLibrary::instance().materialFromId(materialSet->roofMaterialId());
-	roofGeometry->setStateSet(stateSet);
+	roofGeode->setStateSet(stateSet);
 	roofGeode->addDrawable(roofGeometry);
 	return roofGeode;
 }
