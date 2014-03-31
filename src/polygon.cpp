@@ -268,10 +268,13 @@ osg::ref_ptr<osg::Group> PolygonTree::createBuildingTree(osg::Vec2 parentTileOri
 			localPath << filename.str();
 
 			if (buildingGroup.valid()) {
-				osgDB::writeNodeFile(*buildingGroup, fullPath.str());
+				osg::ref_ptr<osgDB::Options> fileOptions = new osgDB::Options;
+				// Only save filename of textures
+				fileOptions->setOptionString("WriteImageHint=UseExternal");
+				osgDB::writeNodeFile(*buildingGroup, fullPath.str(), fileOptions);
 				// Create page lod node
 				osg::ref_ptr<osg::PagedLOD> pageLod = new osg::PagedLOD;
-				pageLod->addChild(buildingGroup, 0, 2000.0, localPath.str());
+				pageLod->addChild(buildingGroup, 0, 5000.0 , localPath.str());
 				matrixTransform->addChild(pageLod);
 			}
 		}
