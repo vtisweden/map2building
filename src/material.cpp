@@ -29,12 +29,16 @@ void Material::load(pugi::xml_node materialNode)
 {
 	m_name = materialNode.attribute("name").as_string("");
 
-	if (pugi::xml_node ambientNode = materialNode.child("ambient")) {
-		m_ambient = getColorFromNode(ambientNode);
-	}
 
 	if (pugi::xml_node diffuseNode = materialNode.child("diffuse")) {
 		m_diffuse = getColorFromNode(diffuseNode);
+	}
+
+	if (pugi::xml_node ambientNode = materialNode.child("ambient")) {
+		m_ambient = getColorFromNode(ambientNode);
+	} else {
+		// If no ambient value is defined, use same value as for diffuse
+		m_ambient = m_diffuse;
 	}
 
 	if (pugi::xml_node specularNode = materialNode.child("specular")) {
