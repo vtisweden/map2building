@@ -136,23 +136,24 @@ osg::ref_ptr<osg::Geometry> Building::extrudePolygon(osg::ref_ptr<Polygon> polyg
 	// Collect the verticies
 	osg::ref_ptr<osg::Vec3Array> vertexArray = new osg::Vec3Array;
 	osg::ref_ptr<osg::Vec3Array> normalArray = new osg::Vec3Array;
+	osg::ref_ptr<osg::Vec2Array> textureArray = new osg::Vec2Array;
 	osg::Vec2Array::iterator it;
 	// Height from low to high
 	double h1 = osg::minimum(polygon->height(), polygon->height() + height);
 	double h2 = osg::maximum(polygon->height(), polygon->height() + height);
 	// Add vertex and normals from points
 	size_t numberOfPoints = polygon->points()->size();
-
+	double startU = 0.0;
 	for (size_t p = 0; p < (numberOfPoints - 1); ++p) {
 		osg::Vec2 point1 = polygon->points()->at(p) - baseCoordinate;
 		osg::Vec2 point2 = polygon->points()->at(p+1) - baseCoordinate;
-		createVertexAndNormal(point1, point2, h1, h2, vertexArray, normalArray);
+		createVertexAndNormal(point1, point2, h1, h2, vertexArray, normalArray, textureArray, startU);
 	}
 
 	// Add first point to close loop
 	osg::Vec2 point1 = polygon->points()->at(numberOfPoints-1) - baseCoordinate;
 	osg::Vec2 point2 = polygon->points()->at(0) - baseCoordinate;
-	createVertexAndNormal(point1, point2, h1, h2, vertexArray, normalArray);
+	createVertexAndNormal(point1, point2, h1, h2, vertexArray, normalArray, textureArray, startU);
 	osg::ref_ptr<osg::Geometry> wallGeometry = new osg::Geometry;
 	wallGeometry->setVertexArray(vertexArray);
 	wallGeometry->addPrimitiveSet( new osg::DrawArrays(GL_QUADS, 0, vertexArray->size()) );
@@ -162,27 +163,49 @@ osg::ref_ptr<osg::Geometry> Building::extrudePolygon(osg::ref_ptr<Polygon> polyg
 	colorArray->push_back(color);
 	wallGeometry->setColorArray(colorArray);
 	wallGeometry->setColorBinding(osg::Geometry::BIND_OVERALL);
+
+	wallGeometry->setTexCoordArray(0, textureArray);
 	return wallGeometry;
 }
 
-void Building::createVertexAndNormal(osg::Vec2 point1, osg::Vec2 point2, double h1, double h2, osg::ref_ptr<osg::Vec3Array> vertexArray, osg::ref_ptr<osg::Vec3Array> normalArray)
+void Building::createVertexAndNormal(osg::Vec2 point1, osg::Vec2 point2,
+	double h1, double h2,
+	osg::ref_ptr<osg::Vec3Array> vertexArray,
+	osg::ref_ptr<osg::Vec3Array> normalArray,
+	osg::ref_ptr<osg::Vec2Array> textureArray,
+	double& startU) 
 {
 	osg::Vec3 vertex1 = osg::Vec3(point1.x(), point1.y(), h1);
 	osg::Vec3 vertex2 = osg::Vec3(point1.x(), point1.y(), h2);
-	osg::Vec3 vertex3 = osg::Vec3(point2.x(), point2.y(), h1);
-	osg::Vec3 vertex4 = osg::Vec3(point2.x(), point2.y(), h2);
+	osg::Vec3 vertex3 = osg::Vec3(point2.x(), point2.y(), h2);
+	osg::Vec3 vertex4 = osg::Vec3(point2.x(), point2.y(), h1);
+
+	double endV = fabs(h1 - h2);
+	osg::Vec2 textureCoord1 = osg::Vec2(startU, 0);
+	osg::Vec2 textureCoord2 = osg::Vec2(startU, endV);
+
+	startU += (point2 - point1).length();
+
+	osg::Vec2 textureCoord3 = osg::Vec2(startU, endV);
+	osg::Vec2 textureCoord4 = osg::Vec2(startU, 0);
 	// Vertexs
 	vertexArray->push_back(vertex1);
 	vertexArray->push_back(vertex2);
-	vertexArray->push_back(vertex4);
 	vertexArray->push_back(vertex3);
+	vertexArray->push_back(vertex4);
 	// Normals
-	osg::Vec3 normal = (vertex2 - vertex1)^(vertex3 - vertex1);
+	osg::Vec3 normal = (vertex2 - vertex1)^(vertex4 - vertex1);
 	normal.normalize();
 	normalArray->push_back(normal);
 	normalArray->push_back(normal);
 	normalArray->push_back(normal);
 	normalArray->push_back(normal);
+
+	// Texture Coordinates
+	textureArray->push_back(textureCoord1);
+	textureArray->push_back(textureCoord2);
+	textureArray->push_back(textureCoord3);
+	textureArray->push_back(textureCoord4);
 }
 
 
