@@ -67,7 +67,7 @@ osg::ref_ptr<osg::Geode> Building::buildBasement(osg::ref_ptr<Polygon> polygon, 
 {
 	osg::ref_ptr<osg::Geode> basementGeode = new osg::Geode;
 	osg::Vec4 basementColor = osg::Vec4(1.0, 1.0, 1.0, 1.0);
-	osg::ref_ptr<osg::Geometry> basementGeometry = buildWall(polygon, baseCoordinate, -m_basementHeight, basementColor);
+	osg::ref_ptr<osg::Geometry> basementGeometry = extrudePolygon(polygon, baseCoordinate, -m_basementHeight, basementColor);
 	// Apply material
 	osg::ref_ptr<osg::StateSet> stateSet = MaterialLibrary::instance().materialFromId(materialSet->baseMaterialId());
 	basementGeometry->setStateSet(stateSet);
@@ -79,7 +79,7 @@ osg::ref_ptr<osg::Geode> Building::buildWalls(osg::ref_ptr<Polygon> polygon, osg
 {
 	osg::ref_ptr<osg::Geode> wallGeode = new osg::Geode;
 	osg::Vec4 wallColor = osg::Vec4(1.0, 1.0, 1.0, 1.0);
-	osg::ref_ptr<osg::Geometry> wallGeometry = buildWall(polygon, baseCoordinate, m_roofHeight, wallColor);
+	osg::ref_ptr<osg::Geometry> wallGeometry = extrudePolygon(polygon, baseCoordinate, m_roofHeight, wallColor);
 	// Apply material
 	osg::ref_ptr<osg::StateSet> stateSet = MaterialLibrary::instance().materialFromId(materialSet->wallMaterialId());
 	wallGeometry->setStateSet(stateSet);
@@ -131,7 +131,7 @@ osg::ref_ptr<osg::Geode> Building::buildRoof(osg::ref_ptr<Polygon> polygon, osg:
 	return roofGeode;
 }
 
-osg::ref_ptr<osg::Geometry> Building::buildWall(osg::ref_ptr<Polygon> polygon, osg::Vec2 baseCoordinate, double height, osg::Vec4 color)
+osg::ref_ptr<osg::Geometry> Building::extrudePolygon(osg::ref_ptr<Polygon> polygon, osg::Vec2 baseCoordinate, double height, osg::Vec4 color)
 {
 	// Collect the verticies
 	osg::ref_ptr<osg::Vec3Array> vertexArray = new osg::Vec3Array;
