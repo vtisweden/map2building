@@ -42,6 +42,7 @@ void TextureLibrary::load(pugi::xml_node texturesNode)
 		if (textureImage) {
 			osg::notify(osg::DEBUG_INFO) << "Texture: Id: " << id << "\tFilename: " << osgDB::getSimpleFileName(filename) << std::endl;
 			osg::ref_ptr<osg::Texture2D> texture = new osg::Texture2D;
+			texture->setResizeNonPowerOfTwoHint(false);
 			texture->setImage(textureImage);
 			texture->setWrap(osg::Texture2D::WRAP_S, osg::Texture2D::REPEAT);
 			texture->setWrap(osg::Texture2D::WRAP_T, osg::Texture2D::REPEAT);
