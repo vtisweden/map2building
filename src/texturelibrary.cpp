@@ -35,6 +35,8 @@ void TextureLibrary::load(pugi::xml_node texturesNode)
 		unsigned int id = textureNode.attribute("id").as_uint(0);
 		std::string filename = osgDB::findDataFile(textureNode.attribute("filename").as_string(""));
 		osg::ref_ptr<osg::Image> textureImage = osgDB::readImageFile(filename);
+		// Strip path from filename
+		textureImage->setFileName(osgDB::getSimpleFileName(filename));
 
 		if (textureImage) {
 			osg::notify(osg::DEBUG_INFO) << "Texture: Id: " << id << "\tFilename: " << osgDB::getSimpleFileName(filename) << std::endl;
