@@ -36,7 +36,6 @@ void WorldBuilder::loadConfiguration()
 			MaterialLibrary::instance().load(materialsNode);
 		}
 
-
 		// Buildings
 		if (pugi::xml_node buildingsNode = configurationNode.child("buildings")) {
 			BuildingLibrary::instance().load(buildingsNode);
@@ -185,15 +184,12 @@ void WorldBuilder::buildWorld()
 	// Balance polygon tree
 	osg::notify(osg::ALWAYS) << "Balancing polygon tree..." << std::endl;
 	polygonTree->balance();
-
 	// Create buildings from polygons
 	osg::notify(osg::ALWAYS) << "Create buildings from polygon tree..." << std::endl;
 	osg::ref_ptr<osg::Group> worldGroup = polygonTree->createBuildingTree();
-
 	// Write model output
 	osg::notify(osg::ALWAYS) << "Write models as output..." << std::endl;
 	osgDB::writeNodeFile(*worldGroup, completeFilename.str());
-
 	// Export all textures
 	osg::notify(osg::ALWAYS) << "Exporting textures..." << std::endl;
 	std::stringstream texturePath;

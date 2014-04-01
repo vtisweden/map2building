@@ -58,12 +58,15 @@ void TextureLibrary::load(pugi::xml_node texturesNode)
 	}
 }
 
-void TextureLibrary::exportTextures(std::string outputPath) {
+void TextureLibrary::exportTextures(std::string outputPath)
+{
 	TextureMapIterator textureIt;
 	std::stringstream completeFilename;
+
 	for (textureIt = m_textureMap.begin(); textureIt != m_textureMap.end(); ++textureIt) {
 		osg::ref_ptr<osg::Texture> texture = (*textureIt).second;
 		osg::ref_ptr<osg::Texture2D> texture2D = dynamic_cast<osg::Texture2D*>(texture.get());
+
 		if (texture2D.valid()) {
 			osg::ref_ptr<osg::Image> textureImage = texture2D->getImage();
 			completeFilename.clear();

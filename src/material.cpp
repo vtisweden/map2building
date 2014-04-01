@@ -29,7 +29,6 @@ void Material::load(pugi::xml_node materialNode)
 {
 	m_name = materialNode.attribute("name").as_string("");
 
-
 	if (pugi::xml_node diffuseNode = materialNode.child("diffuse")) {
 		m_diffuse = getColorFromNode(diffuseNode);
 	}
@@ -73,9 +72,11 @@ osg::ref_ptr<osg::StateSet> Material::getStateSet()
 		m_stateSet = new osg::StateSet;
 		// Set basic material parameters
 		osg::ref_ptr<osg::Material> material = new osg::Material();
+
 		if (!m_name.empty()) {
 			material->setName(m_name);
 		}
+
 		material->setAmbient(osg::Material::FRONT_AND_BACK, m_ambient);
 		material->setDiffuse(osg::Material::FRONT_AND_BACK, m_diffuse);
 		material->setEmission(osg::Material::FRONT_AND_BACK, m_emissive);
@@ -84,7 +85,6 @@ osg::ref_ptr<osg::StateSet> Material::getStateSet()
 		// Do not use color mode, use Material instead
 		material->setColorMode(osg::Material::OFF);
 		m_stateSet->setAttributeAndModes(material, osg::StateAttribute::ON);
-		
 		// Cull back face
 		osg::ref_ptr<osg::CullFace> cullface = new osg::CullFace();
 		cullface->setMode(osg::CullFace::BACK);

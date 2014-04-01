@@ -51,17 +51,17 @@ class Building : public osg::Referenced {
 		osg::ref_ptr<osg::Geode> buildWindows(osg::ref_ptr<Polygon> polygon, osg::Vec2 baseCoordinate, osg::ref_ptr<MaterialSet> materialSet);
 		osg::ref_ptr<osg::Geode> buildRoof(osg::ref_ptr<Polygon> polygon, osg::Vec2 baseCoordinate, osg::ref_ptr<MaterialSet> materialSet);
 		osg::ref_ptr<osg::Geometry> extrudePolygon(osg::ref_ptr<Polygon> polygon, osg::Vec2 baseCoordinate, double height, osg::Vec4 color);
-		void createVertexAndNormal(osg::Vec2 point1, osg::Vec2 point2, 
-			double h1, double h2, 
-			osg::ref_ptr<osg::Vec3Array> vertexArray, 
-			osg::ref_ptr<osg::Vec3Array> normalArray, 
-			osg::ref_ptr<osg::Vec2Array> textureArray,
-			double& startU);
+		void createVertexAndNormal(osg::Vec2 point1, osg::Vec2 point2,
+								   double h1, double h2,
+								   osg::ref_ptr<osg::Vec3Array> vertexArray,
+								   osg::ref_ptr<osg::Vec3Array> normalArray,
+								   osg::ref_ptr<osg::Vec2Array> textureArray,
+								   double& startU);
 		void buildWindowQuad(osg::Vec2 point1, osg::Vec2 point2,
-			double startHeight,
-			osg::ref_ptr<osg::Vec3Array> vertexArray, 
-			osg::ref_ptr<osg::Vec3Array> normalArray, 
-			osg::ref_ptr<osg::Vec2Array> textureArray);
+							 double startHeight,
+							 osg::ref_ptr<osg::Vec3Array> vertexArray,
+							 osg::ref_ptr<osg::Vec3Array> normalArray,
+							 osg::ref_ptr<osg::Vec2Array> textureArray);
 		osg::ref_ptr<MaterialSet> getRandomMaterialSet(osg::Vec2 point);
 
 		double m_basementHeight;

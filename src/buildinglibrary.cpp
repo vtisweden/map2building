@@ -11,9 +11,12 @@
 osg::ref_ptr<Building> BuildingLibrary::getBuildingFromPerimeter(double perimeter)
 {
 	osg::ref_ptr<Building> building = 0;
+
 	for (BuildingMapIterator it = m_buildingMap.begin(); it != m_buildingMap.end(); ++it) {
 		double perimeterInMap = (*it).first;
+
 		if (perimeter < perimeterInMap) { break; }
+
 		building = (*it).second;
 	}
 
