@@ -1,34 +1,250 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- Texture defintions -->
-<textures>
-	<!-- Walls textures-->
-	<texture id="1" filename="textures/bricks_01_d.png" />
-	<texture id="2" filename="textures/stucco_01_d.png" />
-	<texture id="3" filaname="textures/wood_01_d.png" />
-	<!-- Window textures -->
-	<texture id="10" filename="textures/w_01_1.png" />
-	<texture id="11" filename="textures/w_01_2.png" />
-	<texture id="12" filename="textures/w_01_3.png" />
-	<texture id="13" filename="textures/w_03_1.png" />
-	<texture id="14" filename="textures/w_03_2.png" />
-	<!-- Roof textures -->
-	<texture id="20" filename="textures/roofs_01_d.png" />
-	<!-- Basement textures-->
-	<texture id="30" filename="textures/concrete_01_d.png" />
-<textures>
+<configuration>
+	<!-- Textures -->
+	<textures>
+		<!-- Walls textures-->
+		<texture id="1" filename="textures/bricks_01_d.png" />
+		<texture id="2" filename="textures/stucco_01_d.png" />
+		<texture id="3" filename="textures/wood_01_d.png" />
+		<!-- Window textures -->
+		<texture id="10" filename="textures/w_01_1.png" />
+		<texture id="11" filename="textures/w_01_2.png" />
+		<texture id="12" filename="textures/w_01_3.png" />
 
-<!-- Buildings -->
-<buildings>
-	<building type="villa" perimeter="0.0">
-		<basement height="3.0" />
-		<roof height="6.0" />
-		<window offset="0.1" />
-		<materials>
-			<material wall="1" window="10" roof="20" basement="30"/> 
-		<materials>
-	</building>
-	<building type="industry" perimeter="70.0">	
-		<basement height="3.0"/>
-		<roof height="10.0" />
-	<building>
-</buildings>
+		<texture id="13" filename="textures/w_03_1.png" />
+		<texture id="14" filename="textures/w_03_2.png" />
+		<!-- Roof textures -->
+		<texture id="20" filename="textures/roofs_01_d.png" />
+		<!-- Basement textures-->
+		<texture id="30" filename="textures/concrete_01_d.png" />
+	</textures>
+
+	<materials>
+		<!-- Wall Materials -->
+		<material id="1" name="YellowStucco">
+			<diffuse r="0.929411765" g="0.82745098" b="0.635294118"/>
+			<texture id="2"/>
+		</material>
+		<material id="2" name="WhiteStucco">
+			<diffuse r="0.949019608" g="0.921568627" b="0.850980392"/>
+			<texture id="2"/>
+		</material>
+		<material id="3" name="BlueStucco">
+			<diffuse r="0.247058824" g="0.356862745" b="0.450980392"/>
+			<texture id="2"/>
+		</material>
+		<material id="4" name="RoseStucco">
+			<diffuse r="0.780392157" g="0.592156863" b="0.552941176"/>
+			<texture id="2"/>
+		</material>
+		<material id="5" name="GreyStucco">
+			<diffuse r="0.647058824" g="0.666666667" b="0.549019608"/>
+			<texture id="2"/>
+		</material>
+		<material id="6" name="WhiteWood">
+			<diffuse r="0.949019608" g="0.921568627" b="0.850980392"/>
+			<texture id="3"/>
+		</material>
+		<material id="7" name="GreyWood">
+			<diffuse r="0.517647059" g="0.505882353" b="0.470588235"/>
+			<texture id="3"/>
+		</material>
+		<material id="8" name="YellowWood">
+			<diffuse r="0.941176471" g="0.882352941" b="0.760784314"/>
+			<texture id="3"/>
+		</material>
+		<material id="9" name="GreenWood">
+			<diffuse r="0.647058824" g="0.666666667" b="0.549019608"/>
+			<texture id="3"/>
+		</material>
+		<material id="10" name="BlueWood">
+			<diffuse r="0.247058824" g="0.356862745" b="0.450980392"/>
+			<texture id="3"/>
+		</material>
+		<material id="11" name="RedWood">
+			<diffuse r="0.305882353" g="0.08627451" b="0.137254902"/>
+			<texture id="3"/>
+		</material>
+		<!-- Roof Materials -->
+		<material id="20" name="Roof">
+			<diffuse r="0.7" g="0.7" b="0.7" a="1.0"/>
+			<texture id="20"/>
+		</material>
+		<!-- Basement Material -->
+		<material id="30" name="Concrete">
+			<diffuse r="0.8" g="0.8" b="0.8" a="1.0"/>
+			<texture id="30"/>
+		</material>
+		<!-- Window Material -->
+		<material id="40" name="WindowOffice1">
+			<ambient r="0.2" g="0.2" b="0.2" a="1.0"/>
+			<diffuse r="0.8" g="0.8" b="0.8" a="1.0"/>
+			<specular r="0.9" g="0.9" b="0.9" a="1.0"/>
+			<emissive r="0.0" g="0.0" b="0.0" a="1.0"/>
+			<shininess value="12.0"/>
+			<texture id="10"/>
+		</material>
+		<material id="41" name="WindowOffice2">
+			<ambient r="0.2" g="0.2" b="0.2" a="1.0"/>
+			<diffuse r="0.8" g="0.8" b="0.8" a="1.0"/>
+			<specular r="0.9" g="0.9" b="0.9" a="1.0"/>
+			<emissive r="0.0" g="0.0" b="0.0" a="1.0"/>
+			<shininess value="12.0"/>
+			<texture id="11"/>
+		</material>
+		<material id="42" name="WindowOffice3">
+			<ambient r="0.2" g="0.2" b="0.2" a="1.0"/>
+			<diffuse r="0.8" g="0.8" b="0.8" a="1.0"/>
+			<specular r="0.9" g="0.9" b="0.9" a="1.0"/>
+			<emissive r="0.0" g="0.0" b="0.0" a="1.0"/>
+			<shininess value="12.0"/>
+			<texture id="12"/>
+		</material>
+
+		<material id="43" name="HouseWindow1">
+			<ambient r="0.2" g="0.2" b="0.2" a="1.0"/>
+			<diffuse r="0.8" g="0.8" b="0.8" a="1.0"/>
+			<specular r="0.9" g="0.9" b="0.9" a="1.0"/>
+			<emissive r="0.0" g="0.0" b="0.0" a="1.0"/>
+			<shininess value="12.0"/>
+			<texture id="13"/>
+		</material>
+		<material id="44" name="HouseWindow2">
+			<ambient r="0.2" g="0.2" b="0.2" a="1.0"/>
+			<diffuse r="0.8" g="0.8" b="0.8" a="1.0"/>
+			<specular r="0.9" g="0.9" b="0.9" a="1.0"/>
+			<emissive r="0.0" g="0.0" b="0.0" a="1.0"/>
+			<shininess value="12.0"/>
+			<texture id="14"/>
+		</material>
+	</materials>
+
+	<!-- Buildings -->
+	<buildings>
+		<building type="villa" perimeter="0.0">
+			<basement height="3.0" />
+			<floor height="2.8" number="2"/>
+			<window width="1.0" height="1.2" hspace="0.5" vspace="0.8"/>
+			<materials>
+				<material wall="1" window="43" roof="20" basement="30" /> 
+				<material wall="2" window="43" roof="20" basement="30" /> 
+				<material wall="3" window="43" roof="20" basement="30" /> 
+				<material wall="4" window="43" roof="20" basement="30" /> 
+				<material wall="5" window="43" roof="20" basement="30" /> 
+				<material wall="6" window="43" roof="20" basement="30" /> 
+				<material wall="7" window="43" roof="20" basement="30" /> 
+				<material wall="8" window="43" roof="20" basement="30" /> 
+				<material wall="9" window="43" roof="20" basement="30" /> 
+				<material wall="10" window="44" roof="20" basement="30" /> 
+				<material wall="11" window="44" roof="20" basement="30" /> 
+			</materials>
+		</building>
+		<building type="industry" perimeter="70.0">	
+			<basement height="3.0" />
+			<floor height="3.0" number="3"/>
+			<window width="1.0" height="1.8" hspace="0.5" vspace="0.8"/>
+			<materials>
+				<material wall="30" window="40" roof="20" basement="30" /> 
+				<material wall="30" window="41" roof="20" basement="30" /> 
+				<material wall="30" window="42" roof="20" basement="30" /> 
+			</materials>
+		</building>
+	</buildings>
+
+	<!-- Shapes -->
+	<shapes>
+		<shape filename="shapes/by_dyna_500swe_minus_landmarks.shp" />
+	</shapes>
+
+	<!-- Heights -->
+	<heights>
+		<height filename="heights/63925_3425_25_grid.asc" />
+		<height filename="heights/63925_3450_25_grid.asc" />
+		<height filename="heights/63925_3475_25_grid.asc" />
+		<height filename="heights/63925_3500_25_grid.asc" />
+		<height filename="heights/63925_3525_25_grid.asc" />
+		<height filename="heights/63925_3550_25_grid.asc" />
+		<height filename="heights/63925_3575_25_grid.asc" />
+		<height filename="heights/63925_3600_25_grid.asc" />
+		<height filename="heights/63925_3625_25_grid.asc" />
+		<height filename="heights/63950_3200_25_grid.asc" />
+		<height filename="heights/63950_3225_25_grid.asc" />
+		<height filename="heights/63950_3250_25_grid.asc" />
+		<height filename="heights/63950_3275_25_grid.asc" />
+		<height filename="heights/63950_3300_25_grid.asc" />
+		<height filename="heights/63950_3325_25_grid.asc" />
+		<height filename="heights/63950_3350_25_grid.asc" />
+		<height filename="heights/63950_3375_25_grid.asc" />
+		<height filename="heights/63950_3400_25_grid.asc" />
+		<height filename="heights/63950_3425_25_grid.asc" />
+		<height filename="heights/63950_3450_25_grid.asc" />
+		<height filename="heights/63950_3475_25_grid.asc" />
+		<height filename="heights/63950_3500_25_grid.asc" />
+		<height filename="heights/63950_3525_25_grid.asc" />
+		<height filename="heights/63950_3550_25_grid.asc" />
+		<height filename="heights/63950_3600_25_grid.asc" />
+		<height filename="heights/63950_3625_25_grid.asc" />
+		<height filename="heights/63950_3650_25_grid.asc" />
+		<height filename="heights/63950_3675_25_grid.asc" />
+		<height filename="heights/63950_3700_25_grid.asc" />
+		<height filename="heights/63975_3200_25_grid.asc" />
+		<height filename="heights/63975_3300_25_grid.asc" />
+		<height filename="heights/63975_3325_25_grid.asc" />
+		<height filename="heights/63975_3550_25_grid.asc" />
+		<height filename="heights/63975_3700_25_grid.asc" />
+		<height filename="heights/63975_3725_25_grid.asc" />
+		<height filename="heights/63975_3750_25_grid.asc" />
+		<height filename="heights/64000_3200_25_grid.asc" />
+		<height filename="heights/64000_3225_25_grid.asc" />
+		<height filename="heights/64000_3250_25_grid.asc" />
+		<height filename="heights/64000_3550_25_grid.asc" />
+		<height filename="heights/64000_3725_25_grid.asc" />
+		<height filename="heights/64000_3750_25_grid.asc" />
+		<height filename="heights/64025_3225_25_grid.asc" />
+		<height filename="heights/64025_3250_25_grid.asc" />
+		<height filename="heights/64025_3275_25_grid.asc" />
+		<height filename="heights/64025_3300_25_grid.asc" />
+		<height filename="heights/64025_3325_25_grid.asc" />
+		<height filename="heights/64025_3350_25_grid.asc" />
+		<height filename="heights/64025_3550_25_grid.asc" />
+		<height filename="heights/64025_3575_25_grid.asc" />
+		<height filename="heights/64025_3700_25_grid.asc" />
+		<height filename="heights/64025_3725_25_grid.asc" />
+		<height filename="heights/64050_3350_25_grid.asc" />
+		<height filename="heights/64050_3375_25_grid.asc" />
+		<height filename="heights/64050_3400_25_grid.asc" />
+		<height filename="heights/64050_3575_25_grid.asc" />
+		<height filename="heights/64050_3675_25_grid.asc" />
+		<height filename="heights/64050_3700_25_grid.asc" />
+		<height filename="heights/64075_3400_25_grid.asc" />
+		<height filename="heights/64075_3425_25_grid.asc" />
+		<height filename="heights/64075_3575_25_grid.asc" />
+		<height filename="heights/64075_3650_25_grid.asc" />
+		<height filename="heights/64075_3675_25_grid.asc" />
+		<height filename="heights/64100_3425_25_grid.asc" />
+		<height filename="heights/64100_3450_25_grid.asc" />
+		<height filename="heights/64100_3475_25_grid.asc" />
+		<height filename="heights/64100_3575_25_grid.asc" />
+		<height filename="heights/64100_3600_25_grid.asc" />
+		<height filename="heights/64100_3625_25_grid.asc" />
+		<height filename="heights/64100_3650_25_grid.asc" />
+		<height filename="heights/64125_3450_25_grid.asc" />
+		<height filename="heights/64125_3475_25_grid.asc" />
+		<height filename="heights/64125_3500_25_grid.asc" />
+		<height filename="heights/64125_3575_25_grid.asc" />
+		<height filename="heights/64125_3600_25_grid.asc" />
+		<height filename="heights/64125_3625_25_grid.asc" />
+		<height filename="heights/64150_3475_25_grid.asc" />
+		<height filename="heights/64150_3500_25_grid.asc" />
+		<height filename="heights/64150_3550_25_grid.asc" />
+		<height filename="heights/64150_3575_25_grid.asc" />
+		<height filename="heights/64175_3500_25_grid.asc" />
+		<height filename="heights/64175_3525_25_grid.asc" />
+		<height filename="heights/64175_3550_25_grid.asc" />
+		<height filename="heights/64200_3500_25_grid.asc" />
+		<height filename="heights/64200_3525_25_grid.asc" />
+		<height filename="heights/64200_3550_25_grid.asc" />
+		<height filename="heights/64225_3525_25_grid.asc" />
+		<height filename="heights/64225_3550_25_grid.asc" />
+	</heights>
+</configuration>
