@@ -45,17 +45,23 @@ typedef PolygonVector::iterator PolygonVectorIterator;
 
 class PolygonTree : public osg::Referenced {
 	public:
-		PolygonTree(std::string path = std::string(""), std::string name = std::string(""), size_t bucketSize = 100) : m_northEast(0), m_southEast(0), m_southWest(0), m_northWest(0),
+		PolygonTree(std::string path = std::string(""), std::string name = std::string("")) : m_northEast(0), m_southEast(0), m_southWest(0), m_northWest(0),
 			m_minX(std::numeric_limits<double>::max()),
 			m_maxX(std::numeric_limits<double>::min()),
 			m_minY(std::numeric_limits<double>::max()),
 			m_maxY(std::numeric_limits<double>::min()),
-			m_bucketSize(bucketSize), m_path(path), m_name(name) {};
+			m_bucketSize(100), m_path(path), m_name(name) {};
 		void addPolygon(osg::ref_ptr<Polygon> polygon);
 		void setBucketSize(size_t bucketSize);
 		void balance();
 		osg::ref_ptr<osg::Group> createBuildingTree(osg::Vec2 parentTileOrigo = osg::Vec2(0.0, 0.0));
 	protected:
+		PolygonTree(std::string path, std::string name, size_t bucketSize) : m_northEast(0), m_southEast(0), m_southWest(0), m_northWest(0),
+			m_minX(std::numeric_limits<double>::max()),
+			m_maxX(std::numeric_limits<double>::min()),
+			m_minY(std::numeric_limits<double>::max()),
+			m_maxY(std::numeric_limits<double>::min()),
+			m_bucketSize(bucketSize), m_path(path), m_name(name) {};
 		~PolygonTree() {};
 
 		osg::ref_ptr<PolygonTree> m_northEast;

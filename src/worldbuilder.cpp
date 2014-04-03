@@ -153,6 +153,7 @@ void WorldBuilder::buildWorld()
 	completeFilename << fileExtension;
 	// Build balanced tree for polygons
 	osg::ref_ptr<PolygonTree> polygonTree = new PolygonTree(path, filename);
+	polygonTree->setBucketSize(m_maxBuildingsPerFile);
 	osg::notify(osg::ALWAYS) << "Build polygon tree..." << std::endl;
 
 	for (heightIt = m_heightTiles.begin(); heightIt != m_heightTiles.end(); ++heightIt) {

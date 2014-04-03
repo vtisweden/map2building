@@ -20,6 +20,7 @@ int main( int argc, char** argv )
 	arguments.getApplicationUsage()->addCommandLineOption("-c  or --config","Path for configuration file");
 	arguments.getApplicationUsage()->addCommandLineOption("-o  or --output","Path output filename");
 	arguments.getApplicationUsage()->addCommandLineOption("-h  or --help","Display this information");
+	arguments.getApplicationUsage()->addCommandLineOption("--max-buildings","Maximum of buildings per file [default: 100]");
 
 	// if user requests help write it out to cout.
 	if (arguments.argc() < 2 ||arguments.read("-h") || arguments.read("--help")) {
@@ -29,14 +30,20 @@ int main( int argc, char** argv )
 
 	std::string configFile;
 	std::string outputFile;
+	size_t maxBuildingsPerFile;
 	arguments.read("--config",configFile);
 	arguments.read("-c",configFile);
 	arguments.read("--output",outputFile);
 	arguments.read("-o",outputFile);
+	arguments.read("--max-buildings",maxBuildingsPerFile);
 	osg::ref_ptr<WorldBuilder> worldBuilder = new WorldBuilder();
 
 	if (!outputFile.empty()) {
 		worldBuilder->setOutputFilename(outputFile);
+	}
+
+	if (maxBuildingsPerFile > 0) {
+		worldBuilder->setMaximumBuildingsPerFile(maxBuildingsPerFile);
 	}
 
 	if (!configFile.empty()) {
