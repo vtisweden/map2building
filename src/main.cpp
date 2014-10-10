@@ -30,7 +30,7 @@ int main( int argc, char** argv )
 
 	std::string configFile;
 	std::string outputFile;
-	size_t maxBuildingsPerFile;
+	size_t maxBuildingsPerFile = 0;
 	arguments.read("--config",configFile);
 	arguments.read("-c",configFile);
 	arguments.read("--output",outputFile);
