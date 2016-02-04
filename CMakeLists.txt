@@ -4,10 +4,12 @@ SET(CMAKE_ECLIPSE_GENERATE_LINKED_RESOURCES FALSE)
 
 PROJECT(Map2Building)
 
+SET(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+
 # Only enable release and debug builds
 IF(CMAKE_CONFIGURATION_TYPES)
    SET(CMAKE_CONFIGURATION_TYPES Debug Release)
-   set(CMAKE_CONFIGURATION_TYPES "${CMAKE_CONFIGURATION_TYPES}" CACHE STRING
+   SET(CMAKE_CONFIGURATION_TYPES "${CMAKE_CONFIGURATION_TYPES}" CACHE STRING
      "Reset the configurations to what we need"
      FORCE)
 ENDIF()
@@ -38,14 +40,18 @@ SET(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib)
 #######################################
 # Library files
 #######################################
+
 FIND_PACKAGE( OpenGL REQUIRED )
 FIND_PACKAGE( OpenSceneGraph REQUIRED osgViewer osgDB osgGA osgUtil)
+FIND_PACKAGE( PugiXML REQUIRED)
 
 INCLUDE_DIRECTORIES(BEFORE
-    ${OPENGL_INCLUDE_DIR}
-    ${OPENSCENEGRAPH_INCLUDE_DIR}
+	${OPENGL_INCLUDE_DIR}
+	${OPENSCENEGRAPH_INCLUDE_DIR}
 	${OSG_THIRD_PARTY_DIR}/include
+	${PUGIXML_INCLUDE_DIR}
 )
+
 
 ###############################################################################
 # Compiler Options
@@ -74,7 +80,7 @@ IF(UNIX)
 	IF(CMAKE_COMPILER_IS_GNUCC)
 		ADD_DEFINITIONS(-Wall -ansi -pedantic -Wextra)
 		IF (WARNINGS_AS_ERRORS)
-			ADD_DEFINITIONS(-Werror)		
+			ADD_DEFINITIONS(-Werror)
 		ENDIF(WARNINGS_AS_ERRORS)
 	ENDIF(CMAKE_COMPILER_IS_GNUCC)
 ENDIF(UNIX)

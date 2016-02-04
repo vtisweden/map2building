@@ -14,7 +14,7 @@ SET(TARGET_SRC
 	texturelibrary.cpp
 	worldbuilder.cpp
 	# XML Library
-	pugixml.cpp
+	${PUGIXML_INCLUDE_DIR}/pugixml.cpp
 )
 
 # Target headerfiles
@@ -28,9 +28,6 @@ SET(TARGET_H
 	shapetile.h
 	texturelibrary.h
 	worldbuilder.h
-	# XML Library
-	pugiconfig.hpp
-	pugixml.hpp
 )
 
 #####################################################################
