@@ -13,16 +13,16 @@
 bool ShapeTile::load(const std::string& filename)
 {
 	// Register all format drivers needed
-	OGRRegisterAll();
-	OGRDataSource* ogrData = OGRSFDriverRegistrar::Open( filename.c_str(), FALSE );
+	GDALAllRegister();
+	GDALDataset* gdalDataset = static_cast<GDALDataset*>(GDALOpen(filename.c_str(), GA_ReadOnly));
 
-	if (ogrData == NULL) {
+	if (gdalDataset == NULL) {
 		osg::notify(osg::WARN) << "Warning: Unable to load shape file: " << filename << std::endl;
 		return false;
 	}
 
 	// Get Layer 0
-	OGRLayer* ogrLayer = ogrData->GetLayer(0);
+	OGRLayer* ogrLayer = gdalDataset->GetLayer(0);
 	// Reset before calculate bounds
 	ogrLayer->ResetReading();
 	int	numberOfBuildings = ogrLayer->GetFeatureCount();
