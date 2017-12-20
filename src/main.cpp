@@ -30,12 +30,12 @@ int main( int argc, char** argv )
 
 	std::string configFile;
 	std::string outputFile;
-	size_t maxBuildingsPerFile = 0;
-	arguments.read("--config",configFile);
-	arguments.read("-c",configFile);
-	arguments.read("--output",outputFile);
-	arguments.read("-o",outputFile);
-	arguments.read("--max-buildings",maxBuildingsPerFile);
+	int maxBuildingsPerFile = 0;
+	arguments.read("--config", configFile);
+	arguments.read("-c", configFile);
+	arguments.read("--output", outputFile);
+	arguments.read("-o", outputFile);
+	arguments.read("--max-buildings", maxBuildingsPerFile);
 	osg::ref_ptr<WorldBuilder> worldBuilder = new WorldBuilder();
 
 	if (!outputFile.empty()) {
